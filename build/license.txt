@@ -1,0 +1,21 @@
+﻿tarus indirme yöneticisi — Son Kullanıcı Lisans ve Kullanım Sözleşmesi
+
+Yayımcı: tarusatolye
+Ürün: tarus indirme yöneticisi (Download Manager)
+Sürüm: 0.0.1
+Telif Hakkı: (c) 2026 tarusatolye. Tüm hakları saklıdır.
+
+1. KAPSAM VE KABUL
+Bu sözleşme, tarus indirme yöneticisi yazılımını kuran veya kullanan kişi ile tarusatolye arasındadır. Kurulumu tamamlayarak bu koşulları kabul etmiş sayılırsınız.
+
+2. KULLANIM HAKKI VE AÇIK KAYNAK
+Yazılım ücretsiz ve açık kaynak kodludur. Kişisel, mesleki ve kurumsal amaçlarla ücretsiz olarak kullanılabilir.
+
+3. KULLANICI SORUMLULUĞU VE TELİF HAKLARI
+Yazılım bir indirme aracıdır. İndirilen içeriklerin telif hakları, kullanım izinleri ve üçüncü taraf platform kurallarına (YouTube vb.) uygunluğundan tamamen Kullanıcı sorumludur.
+
+4. GİZLİLİK VE VERİ TOPLAMA
+Yazılım hiçbir kişisel veri, indirme geçmişi veya dosya içeriğini uzak sunuculara göndermez. Tüm iletişim yerel bilgisayarınızda (localhost) gerçekleşir.
+
+5. GARANTİ REDDİ
+Yazılım "olduğu gibi" (AS-IS) sunulur. tarusatolye, kullanımından doğabilecek veri kayıplarından veya üçüncü taraf servis aksamalarından sorumlu tutulamaz.
