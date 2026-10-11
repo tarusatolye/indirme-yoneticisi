@@ -21,7 +21,7 @@
   },
   "build": {
     "appId": "tr.tarus.indirmeyoneticisi",
-    "productName": "İndirme Yöneticisi",
+    "productName": "Indirme Yoneticisi",
     "copyright": "Copyright © 2026 tarusatolye",
     "publish": [
       {
@@ -69,7 +69,6 @@
       "category": "public.app-category.utilities",
       "artifactName": "Indirme-Yoneticisi-${version}-mac.${ext}",
       "extendInfo": {
-        "CFBundleName": "Indirme Yoneticisi",
         "CFBundleDisplayName": "İndirme Yöneticisi"
       }
     },
