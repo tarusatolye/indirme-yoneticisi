@@ -15,10 +15,13 @@ function locateBinDir() {
     !__dirname.includes('app.asar') ? path.join(__dirname, '..', 'Tools') : null,
     path.join(process.cwd(), 'bin'),
     path.join(process.cwd(), 'Tools'),
+    process.execPath ? path.join(path.dirname(process.execPath), '..', 'Resources', 'bin') : null,
     process.execPath ? path.join(path.dirname(process.execPath), 'resources', 'bin') : null,
     process.execPath ? path.join(path.dirname(process.execPath), 'bin') : null,
     path.join(process.env.APPDATA || '', 'İndirme Yöneticisi', 'bin'),
     path.join(process.env.APPDATA || '', 'indirme-yoneticisi', 'bin'),
+    path.join(require('os').homedir(), 'Library', 'Application Support', 'indirme-yoneticisi', 'bin'),
+    path.join(require('os').homedir(), 'Library', 'Application Support', 'İndirme Yöneticisi', 'bin'),
     path.join(process.env.LOCALAPPDATA || '', 'Microsoft', 'WinGet', 'Links'),
     '/opt/homebrew/bin',
     '/usr/local/bin',
@@ -27,7 +30,12 @@ function locateBinDir() {
   for (const d of dirs) {
     if (d && !d.includes('app.asar') && fs.existsSync(d)) {
       const p = path.join(d, ytDlpBinName);
-      if (fs.existsSync(p)) return d;
+      if (fs.existsSync(p)) {
+        if (!isWin) {
+          try { fs.chmodSync(p, 0o755); } catch (e) {}
+        }
+        return d;
+      }
     }
   }
   return null;
@@ -41,6 +49,10 @@ function locateYtDlp() {
 
 function locateFfmpeg(binDir) {
   if (binDir && fs.existsSync(path.join(binDir, ffmpegBinName))) {
+    const fPath = path.join(binDir, ffmpegBinName);
+    if (!isWin) {
+      try { fs.chmodSync(fPath, 0o755); } catch (e) {}
+    }
     return binDir;
   }
   const winget = path.join(process.env.LOCALAPPDATA || '', 'Microsoft', 'WinGet', 'Links');
@@ -50,12 +62,20 @@ function locateFfmpeg(binDir) {
   const searchDirs = [
     path.join(process.env.APPDATA || '', 'İndirme Yöneticisi', 'bin'),
     path.join(process.env.APPDATA || '', 'indirme-yoneticisi', 'bin'),
+    path.join(require('os').homedir(), 'Library', 'Application Support', 'indirme-yoneticisi', 'bin'),
+    path.join(require('os').homedir(), 'Library', 'Application Support', 'İndirme Yöneticisi', 'bin'),
     '/opt/homebrew/bin',
     '/usr/local/bin',
     '/usr/bin'
   ];
   for (const ad of searchDirs) {
-    if (ad && fs.existsSync(path.join(ad, ffmpegBinName))) return ad;
+    if (ad && fs.existsSync(path.join(ad, ffmpegBinName))) {
+      const fPath = path.join(ad, ffmpegBinName);
+      if (!isWin) {
+        try { fs.chmodSync(fPath, 0o755); } catch (e) {}
+      }
+      return ad;
+    }
   }
   return null;
 }
@@ -174,7 +194,8 @@ class SegmentedDownloader {
       return this.startVideoDownload(item, state, segmentCount);
     }
 
-    const savePath = item.save_path || item.savePath || path.join(process.env.USERPROFILE || '', 'Downloads', 'download');
+    const defaultDownloads = path.join(require('os').homedir(), 'Downloads');
+    const savePath = item.save_path || item.savePath || path.join(defaultDownloads, 'download');
     const dir = path.dirname(savePath);
     if (!fs.existsSync(dir)) {
       try { fs.mkdirSync(dir, { recursive: true }); } catch (e) {}
@@ -501,12 +522,13 @@ class SegmentedDownloader {
   startVideoDownload(item, state, segmentCount = 8) {
     const id = item.id;
     const binDir = locateBinDir();
-    const exe = binDir ? path.join(binDir, 'yt-dlp.exe') : locateYtDlp();
+    const exe = binDir ? path.join(binDir, ytDlpBinName) : locateYtDlp();
     const ffmpegDir = locateFfmpeg(binDir);
 
     let saveDir = item.savePath || item.save_path ? path.dirname(item.savePath || item.save_path) : '';
+    const defaultDownloads = path.join(require('os').homedir(), 'Downloads');
     if (!saveDir || saveDir === '.' || !fs.existsSync(saveDir)) {
-      saveDir = path.join(process.env.USERPROFILE || '', 'Downloads');
+      saveDir = defaultDownloads;
     }
     if (!fs.existsSync(saveDir)) {
       try { fs.mkdirSync(saveDir, { recursive: true }); } catch (e) {}
@@ -554,10 +576,20 @@ class SegmentedDownloader {
 
     let proc;
     try {
+      const extraPaths = [
+        binDir,
+        ffmpegDir,
+        '/opt/homebrew/bin',
+        '/usr/local/bin',
+        '/usr/bin',
+        '/bin'
+      ].filter(Boolean).join(isWin ? ';' : ':');
+
       proc = spawn(exe, args, {
         windowsHide: true,
         env: {
           ...process.env,
+          PATH: extraPaths ? `${extraPaths}${isWin ? ';' : ':'}${process.env.PATH || ''}` : process.env.PATH,
           PYTHONIOENCODING: 'utf-8',
           LC_ALL: 'en_US.UTF-8',
           LANG: 'en_US.UTF-8'
