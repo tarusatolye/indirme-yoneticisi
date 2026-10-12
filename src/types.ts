@@ -66,3 +66,12 @@ export interface AddDownloadPayload {
   cookies?: string;
   isVideo?: boolean;
 }
+
+export interface ExtensionInfo {
+  path: string;
+  exists: boolean;
+  isConnected: boolean;
+  lastPing: number;
+  browser: string | null;
+  port: number;
+}

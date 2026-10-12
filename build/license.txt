@@ -1,8 +1,8 @@
-﻿tarus indirme yöneticisi — Son Kullanıcı Lisans ve Kullanım Sözleşmesi
+tarus indirme yöneticisi — Son Kullanıcı Lisans ve Kullanım Sözleşmesi
 
 Yayımcı: tarusatolye
 Ürün: tarus indirme yöneticisi (Download Manager)
-Sürüm: 0.0.1
+Sürüm: 0.0.2
 Telif Hakkı: (c) 2026 tarusatolye. Tüm hakları saklıdır.
 
 1. KAPSAM VE KABUL

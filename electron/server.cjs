@@ -1,6 +1,22 @@
 const http = require('http');
 
-function createServer(port, getDownloadsList, onAddDownload, onAction) {
+let extensionStatus = {
+  lastPing: 0,
+  browser: null,
+  version: '0.0.2'
+};
+
+function getExtensionStatus() {
+  const isConnected = Boolean(extensionStatus.lastPing && (Date.now() - extensionStatus.lastPing < 15000));
+  return {
+    isConnected,
+    lastPing: extensionStatus.lastPing,
+    browser: extensionStatus.browser,
+    version: extensionStatus.version
+  };
+}
+
+function createServer(port, getDownloadsList, onAddDownload, onAction, onExtensionPing) {
   const server = http.createServer((req, res) => {
     // Enable CORS for browser extensions
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -23,10 +39,19 @@ function createServer(port, getDownloadsList, onAddDownload, onAction) {
     };
 
     if (req.method === 'GET' && pathname === '/ping') {
+      const browserParam = parsedUrl.searchParams.get('browser') || req.headers['x-mcdm-extension'] || null;
+      extensionStatus.lastPing = Date.now();
+      if (browserParam) {
+        extensionStatus.browser = browserParam;
+      }
+      if (typeof onExtensionPing === 'function') {
+        try { onExtensionPing(getExtensionStatus()); } catch (e) {}
+      }
+
       const downloads = getDownloadsList();
       const activeCount = downloads.filter(d => d.status === 'downloading').length;
       sendJson(200, {
-        version: '0.0.1',
+        version: '0.0.2',
         active: activeCount,
         running: true,
         app: 'Download Manager',
@@ -117,4 +142,4 @@ function createServer(port, getDownloadsList, onAddDownload, onAction) {
   return server;
 }
 
-module.exports = { createServer };
+module.exports = { createServer, getExtensionStatus };

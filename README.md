@@ -30,7 +30,7 @@
 ## Kurulum
 
 ### Windows
-1. [GitHub Sürümler (Releases)](https://github.com/tarusatolye/indirme-yoneticisi/releases) sayfasından `İndirme Yöneticisi Setup 0.0.1.exe` dosyasını indirin.
+1. [GitHub Sürümler (Releases)](https://github.com/tarusatolye/indirme-yoneticisi/releases) sayfasından `İndirme Yöneticisi Setup 0.0.2.exe` dosyasını indirin.
 2. Kurulum sihirbazını başlatın ve kurulumu tamamlayın (veya kurulumsuz çalışan `Portable` sürümünü kullanabilirsiniz).
 3. Uygulama açıldığında masaüstü simgesinden veya sistem tepsisinden erişebilirsiniz.
 
@@ -40,17 +40,15 @@
 
 ---
 
-## Tarayıcı Eklentisinin Kurulması
+## Tarayıcı Eklentisinin Kurulması (Uygulama İçi Tek Tık)
 
-Uygulamanın tarayıcınızdaki indirmeleri otomatik yakalayabilmesi için eklentiyi yükleyin:
+Uygulama içerisindeki yerleşik kurulum sihirbazı ile eklentiyi saniyeler içinde kurabilirsiniz:
 
-1. **Chrome / Edge / Brave:**
-   - Tarayıcınızda `chrome://extensions` (veya `edge://extensions`) sayfasını açın.
-   - Sağ üstteki **Geliştirici Modu**'nu (Developer Mode) açın.
-   - **Paketlenmemiş öge yükle** (Load unpacked) butonuna tıklayın ve projedeki `Extension` klasörünü seçin.
-2. **Firefox:**
-   - `about:debugging#/runtime/this-firefox` adresine gidin.
-   - **Geçici Eklenti Yükle** (Load Temporary Add-on) diyerek `Extension/manifest.json` dosyasını seçin.
+1. Uygulamayı açın ve üst araç çubuğundaki **Tarayıcı Eklentisi** (Yapboz simgesi) butonuna (veya alt durum çubuğundaki eklenti göstergesine) tıklayın.
+2. Kullandığınız tarayıcıyı (Chrome, Edge, Brave, Firefox, Opera) seçip **"Eklentiler Sayfasını Aç"** butonuna tıklayın.
+3. Açılan tarayıcı sayfasında sağ üstteki **Geliştirici Modu**'nu (Developer Mode) açın.
+4. **"Eklenti Klasörünü Aç"** butonuna basarak gelen `extension` klasörünü tarayıcı penceresine sürükleyin (veya *"Paketlenmemiş öge yükle"* butonuna tıklayıp kopyalanan yolu seçin).
+5. Eklenti kurulduğunda uygulama arayüzü anında yeşile döner ve tarayıcınızdaki tüm indirmeler otomatik olarak İndirme Yöneticisi tarafından yakalanır.
 
 ---
 

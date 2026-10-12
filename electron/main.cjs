@@ -1,9 +1,10 @@
-const { app, BrowserWindow, ipcMain, shell, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Menu, clipboard } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
+const { exec } = require('child_process');
 const { SegmentedDownloader } = require('./downloader.cjs');
-const { createServer } = require('./server.cjs');
+const { createServer, getExtensionStatus } = require('./server.cjs');
 
 // Ensure single instance
 const gotTheLock = app.requestSingleInstanceLock();
@@ -237,6 +238,69 @@ function addDownloadInternal(payload) {
   return item;
 }
 
+// Extension directory helper — ensures extension files exist in writable userData
+function prepareExtensionDirectory() {
+  const targetDir = path.join(userDataPath, 'extension');
+  const sourceCandidates = [
+    path.join(process.resourcesPath, 'Extension'),
+    path.join(__dirname, '..', 'Extension')
+  ];
+
+  let sourceDir = null;
+  for (const candidate of sourceCandidates) {
+    if (fs.existsSync(candidate) && fs.existsSync(path.join(candidate, 'manifest.json'))) {
+      sourceDir = candidate;
+      break;
+    }
+  }
+
+  if (sourceDir) {
+    try {
+      fs.mkdirSync(targetDir, { recursive: true });
+      fs.cpSync(sourceDir, targetDir, { recursive: true });
+    } catch (err) {
+      console.error('Failed to copy extension files:', err);
+    }
+  }
+
+  return targetDir;
+}
+
+function launchBrowserExtensionPage(targetBrowser, url) {
+  if (process.platform === 'win32') {
+    const browserExecutables = {
+      chrome: 'chrome',
+      edge: 'msedge',
+      brave: 'brave',
+      firefox: 'firefox',
+      opera: 'opera'
+    };
+
+    const exe = browserExecutables[targetBrowser] || 'chrome';
+    exec(`start ${exe} "${url}"`, (err) => {
+      if (err) {
+        shell.openExternal(url).catch(() => {});
+      }
+    });
+  } else if (process.platform === 'darwin') {
+    const macAppNames = {
+      chrome: 'Google Chrome',
+      edge: 'Microsoft Edge',
+      brave: 'Brave Browser',
+      firefox: 'Firefox',
+      opera: 'Opera'
+    };
+    const appName = macAppNames[targetBrowser] || 'Google Chrome';
+    exec(`open -a "${appName}" "${url}"`, (err) => {
+      if (err) {
+        shell.openExternal(url).catch(() => {});
+      }
+    });
+  } else {
+    shell.openExternal(url).catch(() => {});
+  }
+}
+
 // Start browser extension bridge server
 createServer(
   settings.port || 48213,
@@ -267,6 +331,9 @@ createServer(
       saveDownloads();
       emitTauriEvent('download_deleted', id);
     }
+  },
+  (status) => {
+    emitTauriEvent('extension_status', status);
   }
 );
 
@@ -399,6 +466,56 @@ ipcMain.handle('tauri-invoke', async (_e, cmd, args) => {
       return null;
     }
 
+    case 'get_extension_info': {
+      const extPath = prepareExtensionDirectory();
+      const status = getExtensionStatus();
+      return {
+        path: extPath,
+        exists: fs.existsSync(extPath),
+        isConnected: status.isConnected,
+        lastPing: status.lastPing,
+        browser: status.browser,
+        port: settings.port || 48213
+      };
+    }
+
+    case 'open_extension_folder': {
+      const extPath = prepareExtensionDirectory();
+      if (fs.existsSync(extPath)) {
+        shell.openPath(extPath);
+      }
+      return true;
+    }
+
+    case 'copy_extension_path': {
+      const extPath = prepareExtensionDirectory();
+      clipboard.writeText(extPath);
+      return true;
+    }
+
+    case 'open_browser_extensions_page': {
+      const targetBrowser = (args?.browser || 'chrome').toLowerCase();
+      const extPath = prepareExtensionDirectory();
+      clipboard.writeText(extPath);
+
+      let url = 'chrome://extensions';
+      if (targetBrowser === 'edge') {
+        url = 'edge://extensions';
+      } else if (targetBrowser === 'brave') {
+        url = 'brave://extensions';
+      } else if (targetBrowser === 'firefox') {
+        url = 'about:debugging#/runtime/this-firefox';
+      } else if (targetBrowser === 'opera') {
+        url = 'opera://extensions';
+      }
+
+      launchBrowserExtensionPage(targetBrowser, url);
+      if (args?.openFolder !== false && fs.existsSync(extPath)) {
+        shell.openPath(extPath);
+      }
+      return true;
+    }
+
     default:
       console.warn('Unhandled tauri command:', cmd, args);
       return null;
@@ -467,6 +584,7 @@ autoUpdater.on('error', (err) => {
 });
 
 app.whenReady().then(() => {
+  prepareExtensionDirectory();
   createWindow();
 
   if (app.isPackaged) {

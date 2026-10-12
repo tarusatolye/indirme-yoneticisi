@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { X, Settings as SettingsIcon, Info, ExternalLink, GitFork, ShieldCheck, Heart, RefreshCw } from "lucide-react";
-import { AppSettings } from "../types";
+import { X, Settings as SettingsIcon, Info, ExternalLink, GitFork, ShieldCheck, Heart, RefreshCw, Puzzle, FolderOpen, Copy, Check, ExternalLink as ExtLink } from "lucide-react";
+import { AppSettings, ExtensionInfo } from "../types";
 import { translations } from "../i18n";
 
 interface SettingsModalProps {
@@ -21,11 +21,22 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   if (!isOpen) return null;
   const t = translations[lang].settingsModal;
+  const extT = translations[lang].extensionModal;
 
-  const [activeTab, setActiveTab] = useState<"general" | "about">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "extension" | "about">("general");
   const [form, setForm] = useState<AppSettings>({ ...settings });
   const [updateStatus, setUpdateStatus] = useState<"idle" | "checking" | "latest" | "downloading" | "error">("idle");
   const [updateMessage, setUpdateMessage] = useState<string>("");
+  const [extInfo, setExtInfo] = useState<ExtensionInfo | null>(null);
+  const [extCopied, setExtCopied] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === "extension") {
+      invoke<ExtensionInfo>("get_extension_info")
+        .then(setExtInfo)
+        .catch((e) => console.error(e));
+    }
+  }, [activeTab]);
 
   const handleCheckUpdate = async () => {
     setUpdateStatus("checking");
@@ -40,7 +51,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         setUpdateMessage(`Yeni sürüm (v${res.updateInfo.version}) indiriliyor...`);
       } else {
         setUpdateStatus("latest");
-        setUpdateMessage("Uygulama güncel (v.0.0.1)");
+        setUpdateMessage("Uygulama güncel (v.0.0.2)");
       }
     } catch {
       setUpdateStatus("error");
@@ -84,6 +95,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           >
             <SettingsIcon size={13} />
             <span>{t.tabGeneral}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("extension")}
+            className={`flex items-center space-x-1.5 py-2.5 px-3 border-b-2 font-medium text-xs transition-colors ${
+              activeTab === "extension"
+                ? "border-blue-500 text-white"
+                : "border-transparent text-[#8e95a5] hover:text-[#d4d8e2]"
+            }`}
+          >
+            <Puzzle size={13} />
+            <span>{t.tabExtension}</span>
           </button>
 
           <button
@@ -184,7 +208,101 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </form>
         )}
 
-        {/* Tab 2: About & Open Source Attribution */}
+        {/* Tab 2: Browser Extension Setup */}
+        {activeTab === "extension" && (
+          <div className="p-5 space-y-4">
+            <div className={`p-3.5 rounded-lg border flex items-center justify-between ${
+              extInfo?.isConnected
+                ? "bg-emerald-950/40 border-emerald-700/50 text-emerald-200"
+                : "bg-amber-950/30 border-amber-800/40 text-amber-200"
+            }`}>
+              <div className="flex items-center space-x-2.5">
+                <Puzzle size={18} className={extInfo?.isConnected ? "text-emerald-400" : "text-amber-400"} />
+                <div>
+                  <div className="font-semibold text-xs">
+                    {extInfo?.isConnected ? extT.statusConnected : extT.statusDisconnected}
+                  </div>
+                  <p className="text-[11px] opacity-80 mt-0.5">
+                    {extInfo?.isConnected
+                      ? `${extT.connectedBrowser}: ${extInfo.browser ? extInfo.browser.toUpperCase() : "WebExtension"} · Port: ${extInfo.port}`
+                      : extT.howItWorks}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-[11px] font-semibold text-white">Tarayıcıda Kurulum</div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => invoke("open_browser_extensions_page", { browser: "chrome" })}
+                  className="flex items-center justify-center space-x-2 p-2.5 bg-[#1b1e23] hover:bg-[#282d36] text-white rounded-lg border border-[#343a46] transition-colors"
+                >
+                  <ExtLink size={13} className="text-blue-400" />
+                  <span>Chrome / Brave Eklentileri</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => invoke("open_browser_extensions_page", { browser: "edge" })}
+                  className="flex items-center justify-center space-x-2 p-2.5 bg-[#1b1e23] hover:bg-[#282d36] text-white rounded-lg border border-[#343a46] transition-colors"
+                >
+                  <ExtLink size={13} className="text-sky-400" />
+                  <span>Edge Eklentileri</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-[#1b1e23] border border-[#343a46] rounded-lg p-3 space-y-2">
+              <div className="text-[11px] font-medium text-white flex items-center justify-between">
+                <span>Eklenti Dosyaları (Kullanıcı Alanı)</span>
+                <div className="flex items-center space-x-1.5">
+                  <button
+                    type="button"
+                    onClick={() => invoke("open_extension_folder")}
+                    className="flex items-center space-x-1 px-2 py-0.5 rounded bg-[#2a2f3a] hover:bg-[#353c4a] text-amber-400 border border-[#3b4352] transition-colors text-[10px]"
+                  >
+                    <FolderOpen size={10} />
+                    <span>{extT.btnOpenFolder}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await invoke("copy_extension_path");
+                      setExtCopied(true);
+                      setTimeout(() => setExtCopied(false), 2000);
+                    }}
+                    className="flex items-center space-x-1 px-2 py-0.5 rounded bg-[#2a2f3a] hover:bg-[#353c4a] text-blue-400 border border-[#3b4352] transition-colors text-[10px]"
+                  >
+                    {extCopied ? <Check size={10} className="text-emerald-400" /> : <Copy size={10} />}
+                    <span>{extCopied ? extT.copied : extT.btnCopyPath}</span>
+                  </button>
+                </div>
+              </div>
+              {extInfo?.path && (
+                <div className="bg-[#15171b] p-2 rounded border border-[#2c313a] font-mono text-[10px] text-[#8e95a5] break-all select-all">
+                  {extInfo.path}
+                </div>
+              )}
+              <p className="text-[10px] text-[#8e95a5] leading-relaxed">
+                Tarayıcınızda Geliştirici Modunu açın ve bu klasörü tarayıcı penceresine sürükleyin.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end pt-2 border-t border-[#323843]">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-3.5 py-1 bg-[#2d323b] hover:bg-[#383e4a] text-[#cfd3dc] rounded border border-[#3b424e] transition-colors text-xs"
+              >
+                {t.cancel}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 3: About & Open Source Attribution */}
         {activeTab === "about" && (
           <div className="p-5 space-y-4">
             {/* App Card */}
@@ -211,7 +329,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <div className="flex items-center space-x-2.5">
                   <h3 className="font-semibold text-white text-sm">{t.aboutTitle}</h3>
                   <span className="text-[11px] text-[#8e95a5] font-mono select-all">
-                    v.0.0.1
+                    v.0.0.2
                   </span>
                   <button
                     type="button"

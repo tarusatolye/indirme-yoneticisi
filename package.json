@@ -1,7 +1,7 @@
 {
   "name": "indirme-yoneticisi",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "tarus indirme yöneticisi — hızlı ve açık kaynak kodlu indirme yöneticisi",
   "author": "tarusatolye <yazilim@tarus.tr>",
   "copyright": "Copyright © 2026 tarusatolye",
@@ -42,6 +42,10 @@
       {
         "from": "bin",
         "to": "bin"
+      },
+      {
+        "from": "Extension",
+        "to": "Extension"
       }
     ],
     "win": {

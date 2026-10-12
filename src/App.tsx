@@ -13,13 +13,15 @@ import {
   List,
   ChevronDown,
   RotateCcw,
+  Puzzle,
 } from "lucide-react";
-import { DownloadItem, AppSettings, AddDownloadPayload } from "./types";
+import { DownloadItem, AppSettings, AddDownloadPayload, ExtensionInfo } from "./types";
 import { Sidebar } from "./components/Sidebar";
 import { DownloadTable } from "./components/DownloadTable";
 import { AddDownloadModal } from "./components/AddDownloadModal";
 import { SettingsModal } from "./components/SettingsModal";
 import { SegmentsModal } from "./components/SegmentsModal";
+import { ExtensionModal } from "./components/ExtensionModal";
 import { translations } from "./i18n";
 
 export const App: React.FC = () => {
@@ -39,6 +41,8 @@ export const App: React.FC = () => {
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isExtensionOpen, setIsExtensionOpen] = useState(false);
+  const [extensionInfo, setExtensionInfo] = useState<ExtensionInfo | null>(null);
   const [detailItem, setDetailItem] = useState<DownloadItem | null>(null);
   const [updateDownloadedVersion, setUpdateDownloadedVersion] = useState<string | null>(null);
 
@@ -111,13 +115,37 @@ export const App: React.FC = () => {
       setUpdateDownloadedVersion(event.payload?.version || "Yeni");
     });
 
+    const unlistenExtStatus = listen<any>("extension_status", (event) => {
+      if (event.payload) {
+        setExtensionInfo((prev) => ({
+          path: prev?.path || "",
+          exists: prev?.exists ?? true,
+          isConnected: Boolean(event.payload.isConnected),
+          lastPing: event.payload.lastPing || Date.now(),
+          browser: event.payload.browser || prev?.browser || null,
+          port: settings.port || 48213,
+        }));
+      }
+    });
+
+    // Check extension status periodically
+    const checkExt = () => {
+      invoke<ExtensionInfo>("get_extension_info")
+        .then(setExtensionInfo)
+        .catch(() => {});
+    };
+    checkExt();
+    const extInterval = setInterval(checkExt, 3000);
+
     return () => {
       unlistenAdd.then((f) => f());
       unlistenUpdate.then((f) => f());
       unlistenDelete.then((f) => f());
       unlistenUpdateDownloaded.then((f) => f());
+      unlistenExtStatus.then((f) => f());
+      clearInterval(extInterval);
     };
-  }, []);
+  }, [settings.port]);
 
   // Actions
   const handleAdd = async (payload: AddDownloadPayload) => {
@@ -417,6 +445,29 @@ export const App: React.FC = () => {
           <div className="w-px h-4 bg-[#3d4452] mx-1" />
 
           <button
+            onClick={() => setIsExtensionOpen(true)}
+            title={
+              extensionInfo?.isConnected
+                ? `${t.toolbar.extension} (${t.statusBar.extensionConnected})`
+                : `${t.toolbar.extension} (${t.statusBar.extensionNotConnected})`
+            }
+            className={`relative p-1.5 rounded transition-colors ${
+              extensionInfo?.isConnected
+                ? "text-emerald-400 hover:text-emerald-300 hover:bg-[#383f4b]"
+                : "text-[#cfd3dc] hover:text-white hover:bg-[#383f4b]"
+            }`}
+          >
+            <Puzzle size={15} />
+            <span
+              className={`absolute top-1 right-1 w-2 h-2 rounded-full border border-[#2b3038] ${
+                extensionInfo?.isConnected
+                  ? "bg-emerald-400 shadow-sm shadow-emerald-400"
+                  : "bg-amber-400"
+              }`}
+            />
+          </button>
+
+          <button
             onClick={() => setIsSettingsOpen(true)}
             title={t.toolbar.settings}
             className="p-1.5 text-[#cfd3dc] hover:text-white hover:bg-[#383f4b] rounded transition-colors"
@@ -468,13 +519,31 @@ export const App: React.FC = () => {
 
       {/* Bottom Status Bar matching docs/main.png */}
       <footer className="h-7 bg-[#1c1f24] border-t border-[#16181b] px-4 flex items-center justify-between text-xs text-[#8e95a5]">
-        {/* Left: Version + Bridge indicator */}
-        <div className="flex items-center space-x-2.5">
+        {/* Left: Version + Bridge & Extension indicator */}
+        <div
+          onClick={() => setIsExtensionOpen(true)}
+          className="flex items-center space-x-2.5 cursor-pointer hover:text-white transition-colors group"
+          title="Tarayıcı Eklentisi Ayarları"
+        >
           <span className="text-[11px] font-mono text-[#8e95a5] select-all">
-            v.0.0.1
+            v.0.0.2
           </span>
-          <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
-          <span className="text-[12px] text-[#a0a7b6]">{t.statusBar.bridgeRunning}</span>
+          <div
+            className={`w-2 h-2 rounded-full shadow-sm transition-all ${
+              extensionInfo?.isConnected
+                ? "bg-emerald-500 shadow-emerald-500/50"
+                : "bg-amber-500 shadow-amber-500/50"
+            }`}
+          />
+          <span className="text-[12px] text-[#a0a7b6] group-hover:text-white transition-colors">
+            {extensionInfo?.isConnected
+              ? `${t.statusBar.extensionConnected}${
+                  extensionInfo.browser
+                    ? ` (${extensionInfo.browser.toUpperCase()})`
+                    : ""
+                }`
+              : t.statusBar.extensionNotConnected}
+          </span>
         </div>
 
         {/* Stats on the right */}
@@ -497,6 +566,13 @@ export const App: React.FC = () => {
         onClose={() => setIsAddOpen(false)}
         onAdd={handleAdd}
         lang={lang}
+      />
+
+      <ExtensionModal
+        isOpen={isExtensionOpen}
+        onClose={() => setIsExtensionOpen(false)}
+        lang={lang}
+        port={settings.port}
       />
 
       <SettingsModal
