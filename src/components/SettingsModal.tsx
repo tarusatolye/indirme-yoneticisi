@@ -51,7 +51,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         setUpdateMessage(`Yeni sürüm (v${res.updateInfo.version}) indiriliyor...`);
       } else {
         setUpdateStatus("latest");
-        setUpdateMessage("Uygulama güncel (v.0.0.2)");
+        setUpdateMessage("Uygulama güncel (v.0.0.3)");
       }
     } catch {
       setUpdateStatus("error");
@@ -329,7 +329,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <div className="flex items-center space-x-2.5">
                   <h3 className="font-semibold text-white text-sm">{t.aboutTitle}</h3>
                   <span className="text-[11px] text-[#8e95a5] font-mono select-all">
-                    v.0.0.2
+                    v.0.0.3
                   </span>
                   <button
                     type="button"

@@ -1,7 +1,7 @@
 {
   "name": "indirme-yoneticisi",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "tarus indirme yöneticisi — hızlı ve açık kaynak kodlu indirme yöneticisi",
   "author": "tarusatolye <yazilim@tarus.tr>",
   "copyright": "Copyright © 2026 tarusatolye",
@@ -14,6 +14,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "test": "node --test test/*.test.cjs",
     "start": "electron electron/main.cjs",
     "dist": "npm run build && electron-builder",
     "dist:win": "npm run build && electron-builder --win nsis portable",
