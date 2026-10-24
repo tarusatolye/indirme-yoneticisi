@@ -41,7 +41,7 @@ async function refresh() {
     ? t('popupConnected', [String(st.app.version)]) + (st.app.active ? ` · ${t('popupActive', [String(st.app.active)])}` : '')
     : t('popupOffline');
   $('offline').classList.toggle('hidden', online);
-  $('launch').classList.toggle('hidden', !(st && st.isSafari));
+  $('launch').classList.toggle('hidden', online);
   if (st && st.settings) {
     $('intercept').checked = !!st.settings.intercept;
     $('sniff').checked = !!st.settings.sniff;
@@ -71,6 +71,8 @@ async function loadMedia() {
       const k = m.kind === 'hls' || m.kind === 'dash' ? 'video' : 'file';
       const r = await send({ type: 'download', url: m.url, filename: k === 'file' ? m.name : '', referer: tab.url, kind: k });
       btn.textContent = r && r.ok ? t('popupSent') : t('popupError');
+      if (r && r.ok) setTimeout(refresh, 1000);
+      setTimeout(() => { btn.disabled = false; btn.textContent = t('popupDownload'); }, 3000);
     };
     li.append(info, btn);
     ul.appendChild(li);
@@ -148,6 +150,7 @@ $('pageVideo').onclick = async () => {
   const r = await send({ type: 'download', url: tab.url, referer: tab.url, kind: 'video' });
   $('pageVideo').textContent = r && r.ok ? t('popupStarted') : t('popupFailed');
   loadDownloads();
+  if (r && r.ok) setTimeout(refresh, 1000);
   setTimeout(() => ($('pageVideo').textContent = t('popupPageVideo')), 2500);
 };
 $('pageLink').onclick = async () => {
@@ -157,8 +160,20 @@ $('pageLink').onclick = async () => {
   window.close();
 };
 $('launch').onclick = async () => {
+  $('launch').disabled = true;
+  $('launch').textContent = '…';
   await send({ type: 'launchApp' });
-  setTimeout(refresh, 1500);
+  for (let i = 0; i < 10; i++) {
+    await new Promise((r) => setTimeout(r, 500));
+    const s = await send({ type: 'status' });
+    if (s && s.online) {
+      await refresh();
+      loadDownloads();
+      break;
+    }
+  }
+  $('launch').disabled = false;
+  $('launch').textContent = t('popupLaunch');
 };
 $('intercept').onchange = (e) => send({ type: 'setSettings', settings: { intercept: e.target.checked } });
 $('sniff').onchange = (e) => send({ type: 'setSettings', settings: { sniff: e.target.checked } });

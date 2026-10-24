@@ -526,7 +526,7 @@ export const App: React.FC = () => {
           title="Tarayıcı Eklentisi Ayarları"
         >
           <span className="text-[11px] font-mono text-[#8e95a5] select-all">
-            v.0.0.2
+            v.0.0.3
           </span>
           <div
             className={`w-2 h-2 rounded-full shadow-sm transition-all ${

@@ -17,6 +17,12 @@
   "notifVideoTitle": {
     "message": "Video download started"
   },
+  "notifLaunchingTitle": {
+    "message": "Launching Download Manager"
+  },
+  "notifLaunchingBody": {
+    "message": "The application is starting in the background, download will begin..."
+  },
   "notifOfflineTitle": {
     "message": "Download Manager is not running"
   },

@@ -133,6 +133,15 @@ function notify(title, message) {
   } catch {}
 }
 
+async function postToApp(settings, payload) {
+  const r = await fetch(base(settings) + '/download', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...BRIDGE_HEADERS }, body: JSON.stringify(payload),
+  });
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.error || 'app error');
+  return j;
+}
+
 async function sendToApp({ url, filename, referer, kind }) {
   const settings = await getSettings();
   const ck = await cookiesFor(url);
@@ -140,30 +149,76 @@ async function sendToApp({ url, filename, referer, kind }) {
     url, filename: filename || '', referer: referer || '', kind: kind || 'file',
     userAgent: navigator.userAgent, cookieHeader: ck.header, cookies: ck.list,
   };
+
+  // 1. Try sending directly to the app
   try {
-    const r = await fetch(base(settings) + '/download', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', ...BRIDGE_HEADERS }, body: JSON.stringify(payload),
-    });
-    const j = await r.json();
-    if (!j.ok) throw new Error(j.error || 'app error');
+    await postToApp(settings, payload);
     notify(kind === 'video' ? t('notifVideoTitle') : t('notifSentTitle'), filename || url);
     startProgress();
     return { ok: true };
-  } catch (e) {
+  } catch (initialErr) {
+    // 2. App is offline: automatically launch in the background and retry
+    notify(t('notifLaunchingTitle'), t('notifLaunchingBody'));
+    await launchApp();
+
+    for (let i = 0; i < 12; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const app = await ping(settings);
+      if (app) {
+        try {
+          await postToApp(settings, payload);
+          notify(kind === 'video' ? t('notifVideoTitle') : t('notifSentTitle'), filename || url);
+          startProgress();
+          return { ok: true };
+        } catch (retryErr) {
+          notify(t('notifOfflineTitle'), t('notifOfflineBody'));
+          return { ok: false, error: String(retryErr) };
+        }
+      }
+    }
+
     notify(t('notifOfflineTitle'), t('notifOfflineBody'));
-    return { ok: false, error: String(e) };
+    return { ok: false, error: String(initialErr) };
   }
 }
 
-// Safari: launch the app through native messaging
+// Launch the app through native messaging (Safari / registered host) or custom protocol
 async function launchApp() {
-  if (!api.runtime.sendNativeMessage) return false;
-  try {
-    const r = await api.runtime.sendNativeMessage('application.id', { action: 'launchApp' });
-    return !!(r && r.ok);
-  } catch {
-    return false;
+  let launched = false;
+
+  // 1. Native messaging
+  if (api.runtime?.sendNativeMessage) {
+    try {
+      const r = await api.runtime.sendNativeMessage('tr.tarus.indirmeyoneticisi', { action: 'launchApp' });
+      if (r && r.ok) launched = true;
+    } catch {}
+    if (!launched) {
+      try {
+        const r = await api.runtime.sendNativeMessage('application.id', { action: 'launchApp' });
+        if (r && r.ok) launched = true;
+      } catch {}
+    }
   }
+
+  // 2. Custom protocol URL (indirmeyoneticisi://open)
+  if (!launched) {
+    try {
+      const protocolUrl = 'indirmeyoneticisi://open';
+      if (api.tabs?.create) {
+        const tab = await api.tabs.create({ url: protocolUrl, active: false });
+        if (tab?.id) {
+          setTimeout(() => {
+            try { api.tabs.remove(tab.id); } catch {}
+          }, 1500);
+        }
+        launched = true;
+      }
+    } catch (e) {
+      console.warn('Failed to launch app via protocol:', e);
+    }
+  }
+
+  return launched;
 }
 
 // ---------- Capture file-type filter (list comes from the app) ----------

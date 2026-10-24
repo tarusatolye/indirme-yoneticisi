@@ -5,6 +5,7 @@ const fs = require('fs');
 const { exec } = require('child_process');
 const { SegmentedDownloader } = require('./downloader.cjs');
 const { createServer, getExtensionStatus } = require('./server.cjs');
+const { PROTOCOL_NAMES, parseProtocolUrl, registerProtocolClients } = require('./protocol.cjs');
 
 // Ensure single instance
 const gotTheLock = app.requestSingleInstanceLock();
@@ -12,6 +13,9 @@ if (!gotTheLock) {
   app.quit();
   process.exit(0);
 }
+
+// Register custom protocol schemes (indirmeyoneticisi:// and tarus-dm://)
+registerProtocolClients(app, path.join(__dirname, 'main.cjs'));
 
 // Data storage paths
 const userDataPath = app.getPath('userData');
@@ -552,11 +556,49 @@ function createWindow() {
   });
 }
 
-app.on('second-instance', () => {
+function handleProtocolUrl(rawUrl) {
+  const parsed = parseProtocolUrl(rawUrl);
+  if (!parsed) return;
+
+  if (parsed.action === 'download' && parsed.url) {
+    addDownloadInternal({
+      url: parsed.url,
+      fileName: parsed.fileName,
+      file_name: parsed.fileName,
+      referrer: parsed.referer,
+      referer: parsed.referer,
+      userAgent: parsed.userAgent,
+      user_agent: parsed.userAgent,
+      cookies: parsed.cookies,
+      isVideo: parsed.kind === 'video',
+      is_video_stream: parsed.kind === 'video'
+    });
+  }
+
+  // Bring window to front
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show();
+    mainWindow.focus();
+  }
+}
+
+app.on('second-instance', (_event, commandLine) => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.focus();
   }
+  if (Array.isArray(commandLine)) {
+    const protoArg = commandLine.find(arg => PROTOCOL_NAMES.some(p => arg.startsWith(`${p}://`)));
+    if (protoArg) {
+      handleProtocolUrl(protoArg);
+    }
+  }
+});
+
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  handleProtocolUrl(url);
 });
 
 // Auto-updater configuration
@@ -586,6 +628,13 @@ autoUpdater.on('error', (err) => {
 app.whenReady().then(() => {
   prepareExtensionDirectory();
   createWindow();
+
+  if (Array.isArray(process.argv)) {
+    const protoArg = process.argv.find(arg => PROTOCOL_NAMES.some(p => arg.startsWith(`${p}://`)));
+    if (protoArg) {
+      handleProtocolUrl(protoArg);
+    }
+  }
 
   if (app.isPackaged) {
     // Check after 5 seconds on launch

@@ -17,6 +17,12 @@
   "notifVideoTitle": {
     "message": "Video indirmesi başlatıldı"
   },
+  "notifLaunchingTitle": {
+    "message": "İndirme Yöneticisi başlatılıyor"
+  },
+  "notifLaunchingBody": {
+    "message": "Uygulama arka planda açılıyor, indirme başlatılacak..."
+  },
   "notifOfflineTitle": {
     "message": "İndirme Yöneticisi çalışmıyor"
   },
