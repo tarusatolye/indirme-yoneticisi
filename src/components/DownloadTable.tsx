@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { ConfirmModal } from "./ConfirmModal";
 import {
   FileText,
   Image as ImageIcon,
@@ -50,6 +51,8 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
   onRedownload,
 }) => {
   const t = translations[lang];
+
+  const [deleteFileTarget, setDeleteFileTarget] = useState<string | null>(null);
 
   // Context Menu State
   const [contextMenu, setContextMenu] = useState<{
@@ -473,10 +476,8 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
 
             <button
               onClick={() => {
-                if (window.confirm("Bu dosyayı diskinizden de tamamen silmek istediğinize emin misiniz?")) {
-                  onDelete(contextMenu.item!.id, true);
-                  setContextMenu((prev) => ({ ...prev, visible: false }));
-                }
+                setDeleteFileTarget(contextMenu.item!.id);
+                setContextMenu((prev) => ({ ...prev, visible: false }));
               }}
               className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-red-900/60 hover:text-red-200 text-left text-red-400 font-medium"
             >
@@ -485,6 +486,18 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
             </button>
           </div>
         </div>
+      )}
+      {deleteFileTarget && (
+        <ConfirmModal
+          message={t.confirm.deleteWithFile}
+          confirmLabel={t.confirm.yes}
+          cancelLabel={t.confirm.cancel}
+          onConfirm={() => {
+            onDelete(deleteFileTarget, true);
+            setDeleteFileTarget(null);
+          }}
+          onCancel={() => setDeleteFileTarget(null)}
+        />
       )}
     </div>
   );

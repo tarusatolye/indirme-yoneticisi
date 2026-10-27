@@ -13,6 +13,12 @@ export const translations = {
       searchPrompt: "Listede ara...",
       deleteSelected: "Seçilenleri Sil",
     },
+    confirm: {
+      yes: "Evet",
+      cancel: "Vazgeç",
+      clearAll: "Tüm indirme listesini temizlemek istediğinize emin misiniz?",
+      deleteWithFile: "Bu dosyayı diskinizden de tamamen silmek istediğinize emin misiniz?",
+    },
     contextMenu: {
       openFile: "Dosyayı Aç",
       openFolder: "Klasörde Göster",
@@ -155,6 +161,12 @@ export const translations = {
       extension: "Browser Extension",
       searchPrompt: "Search in the list",
       deleteSelected: "Delete Selected",
+    },
+    confirm: {
+      yes: "Yes",
+      cancel: "Cancel",
+      clearAll: "Are you sure you want to clear the entire list?",
+      deleteWithFile: "Are you sure you want to permanently delete this file from your disk too?",
     },
     contextMenu: {
       openFile: "Open File",

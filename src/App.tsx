@@ -22,6 +22,7 @@ import { AddDownloadModal } from "./components/AddDownloadModal";
 import { SettingsModal } from "./components/SettingsModal";
 import { SegmentsModal } from "./components/SegmentsModal";
 import { ExtensionModal } from "./components/ExtensionModal";
+import { ConfirmModal } from "./components/ConfirmModal";
 import { translations } from "./i18n";
 
 export const App: React.FC = () => {
@@ -38,6 +39,7 @@ export const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [clearMenuOpen, setClearMenuOpen] = useState(false);
+  const [clearAllConfirmOpen, setClearAllConfirmOpen] = useState(false);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -278,10 +280,8 @@ export const App: React.FC = () => {
   };
 
   const handleClearAll = () => {
-    if (window.confirm(lang === "tr" ? "Tüm indirme listesini temizlemek istediğinize emin misiniz?" : "Are you sure you want to clear the entire list?")) {
-      items.forEach((i) => handleDelete(i.id, false));
-      setClearMenuOpen(false);
-    }
+    setClearMenuOpen(false);
+    setClearAllConfirmOpen(true);
   };
 
   const handleDeleteSelected = () => {
@@ -574,6 +574,19 @@ export const App: React.FC = () => {
         lang={lang}
         port={settings.port}
       />
+
+      {clearAllConfirmOpen && (
+        <ConfirmModal
+          message={translations[lang].confirm.clearAll}
+          confirmLabel={translations[lang].confirm.yes}
+          cancelLabel={translations[lang].confirm.cancel}
+          onConfirm={() => {
+            items.forEach((i) => handleDelete(i.id, false));
+            setClearAllConfirmOpen(false);
+          }}
+          onCancel={() => setClearAllConfirmOpen(false)}
+        />
+      )}
 
       <SettingsModal
         isOpen={isSettingsOpen}
