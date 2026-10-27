@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { X, Settings as SettingsIcon, Info, ExternalLink, GitFork, ShieldCheck, Heart, RefreshCw, Puzzle, FolderOpen, Copy, Check, ExternalLink as ExtLink } from "lucide-react";
 import { AppSettings, ExtensionInfo } from "../types";
 import { translations } from "../i18n";
+import { Combobox } from "./Combobox";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -140,29 +141,31 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[#8e95a5] font-medium">{t.segmentCount}</label>
-                <select
+                <Combobox
+                  ariaLabel={t.segmentCount}
                   value={form.segment_count}
-                  onChange={(e) => setForm({ ...form, segment_count: parseInt(e.target.value, 10) })}
-                  className="w-full bg-[#181a1e] border border-[#343a46] rounded-md px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
-                >
-                  <option value={1}>1 (Tek bağlantı)</option>
-                  <option value={2}>2</option>
-                  <option value={4}>4</option>
-                  <option value={8}>8 (Önerilen / IDM Default)</option>
-                  <option value={16}>16 (Maksimum hız)</option>
-                </select>
+                  onChange={(v) => setForm({ ...form, segment_count: v })}
+                  options={[
+                    { value: 1, label: "1 (Tek bağlantı)" },
+                    { value: 2, label: "2" },
+                    { value: 4, label: "4" },
+                    { value: 8, label: "8 (Önerilen / IDM Default)" },
+                    { value: 16, label: "16 (Maksimum hız)" },
+                  ]}
+                />
               </div>
 
               <div className="space-y-1">
                 <label className="text-[#8e95a5] font-medium">{t.language}</label>
-                <select
+                <Combobox
+                  ariaLabel={t.language}
                   value={form.language}
-                  onChange={(e) => setForm({ ...form, language: e.target.value as "tr" | "en" })}
-                  className="w-full bg-[#181a1e] border border-[#343a46] rounded-md px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
-                >
-                  <option value="tr">Türkçe (İndirme Yöneticisi)</option>
-                  <option value="en">English (Download Manager)</option>
-                </select>
+                  onChange={(v) => setForm({ ...form, language: v as "tr" | "en" })}
+                  options={[
+                    { value: "tr", label: "Türkçe (İndirme Yöneticisi)" },
+                    { value: "en", label: "English (Download Manager)" },
+                  ]}
+                />
               </div>
             </div>
 
