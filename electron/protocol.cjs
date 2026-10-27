@@ -41,6 +41,9 @@ function registerProtocolClients(app, basePath) {
     try {
       if (process.defaultApp && targetPath) {
         app.setAsDefaultProtocolClient(proto, process.execPath, [targetPath]);
+      } else if (process.platform === 'win32' && process.env.PORTABLE_EXECUTABLE_FILE) {
+        // Windows portable: execPath is a temp extraction dir deleted on exit; register the real .exe
+        app.setAsDefaultProtocolClient(proto, process.env.PORTABLE_EXECUTABLE_FILE, []);
       } else {
         app.setAsDefaultProtocolClient(proto);
       }
