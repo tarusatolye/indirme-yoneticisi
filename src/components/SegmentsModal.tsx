@@ -42,7 +42,7 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
     : 0;
 
   const formatSize = (bytes: number) => {
-    if (!bytes || bytes <= 0) return "—";
+    if (!bytes || bytes <= 0) return "-";
     if (bytes < 1024) return bytes + " B";
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
     if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1).replace(".", ",") + " MB";
@@ -50,16 +50,16 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
   };
 
   const formatSpeed = (bytesPerSec: number) => {
-    if (!bytesPerSec || bytesPerSec <= 0) return "—";
+    if (!bytesPerSec || bytesPerSec <= 0) return "-";
     if (bytesPerSec < 1024) return bytesPerSec.toFixed(0) + " B/s";
     if (bytesPerSec < 1024 * 1024) return (bytesPerSec / 1024).toFixed(1).replace(".", ",") + " KB/s";
     return (bytesPerSec / (1024 * 1024)).toFixed(1).replace(".", ",") + " MB/s";
   };
 
   const formatTimeLeft = () => {
-    if (item.state !== "downloading" || item.speed <= 0 || item.totalBytes <= 0) return "—";
+    if (item.state !== "downloading" || item.speed <= 0 || item.totalBytes <= 0) return "-";
     const remainingBytes = item.totalBytes - item.receivedBytes;
-    if (remainingBytes <= 0) return "—";
+    if (remainingBytes <= 0) return "-";
     const seconds = Math.ceil(remainingBytes / item.speed);
     if (seconds < 60) return `${seconds} s`;
     const minutes = Math.floor(seconds / 60);
@@ -99,7 +99,7 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
       });
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 modal-perde backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-[#24272d] border border-[#3b424e] rounded-xl shadow-2xl w-full max-w-xl text-[#d4d8e2] text-[13px] font-sans overflow-hidden">
         {/* macOS style Window Header */}
         <div className="h-9 px-4 bg-[#1e2126] border-b border-[#323843] flex items-center justify-between select-none">
@@ -276,7 +276,7 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
                         ) : seg.received > 0 ? (
                           <span className="text-[#8e95a5]">{t.detail.standby}</span>
                         ) : (
-                          <span className="text-[#626875]">—</span>
+                          <span className="text-[#626875]">-</span>
                         )}
                       </div>
                     </div>

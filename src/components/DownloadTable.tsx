@@ -90,7 +90,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
   }, []);
 
   const formatSize = (bytes: number) => {
-    if (!bytes || bytes <= 0) return "—";
+    if (!bytes || bytes <= 0) return "-";
     if (bytes < 1024) return bytes + " B";
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
     if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1).replace(".", ",") + " MB";
@@ -302,7 +302,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                   </span>
 
                   {/* Action buttons on hover */}
-                  <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center space-x-1 tarus-satir-islem">
                     <button
                       title={t.detail.showDetails}
                       onClick={(e) => {
