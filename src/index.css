@@ -16,3 +16,15 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(148, 163, 184, 0.4);
 }
+
+/* Modal perdesi: koyu temada standart rgba(0,0,0,.60); açık temada hafif slate. */
+:root {
+  --perde: rgba(0, 0, 0, 0.6);
+}
+:root[data-theme='light'],
+.light {
+  --perde: rgba(15, 23, 42, 0.35);
+}
+.modal-perde {
+  background-color: var(--perde);
+}

@@ -99,7 +99,7 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
       });
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 modal-perde backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-[#24272d] border border-[#3b424e] rounded-xl shadow-2xl w-full max-w-xl text-[#d4d8e2] text-[13px] font-sans overflow-hidden">
         {/* macOS style Window Header */}
         <div className="h-9 px-4 bg-[#1e2126] border-b border-[#323843] flex items-center justify-between select-none">

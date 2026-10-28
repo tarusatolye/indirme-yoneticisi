@@ -67,7 +67,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 modal-perde backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-[#24272d] border border-[#3b424e] rounded-xl w-full max-w-lg shadow-2xl overflow-hidden text-[#d4d8e2] text-xs font-sans">
         {/* Header with Title and Close Button */}
         <div className="h-10 px-4 bg-[#1e2126] border-b border-[#323843] flex items-center justify-between select-none">
