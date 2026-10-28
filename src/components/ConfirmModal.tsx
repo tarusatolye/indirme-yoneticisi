@@ -18,7 +18,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({ message, confirmLabe
   }, [onCancel]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60" onMouseDown={onCancel}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center modal-perde" onMouseDown={onCancel}>
       <div
         role="alertdialog"
         aria-modal="true"

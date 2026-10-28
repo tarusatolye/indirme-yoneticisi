@@ -20,3 +20,14 @@ test('arayüzde yerel select, alert ve confirm kullanılmaz', () => {
   }
   assert.deepEqual(kaba, []);
 });
+
+test('modal perdesi sabit bg-black yerine --perde token\'ından gelir', () => {
+  const kaba = [];
+  for (const f of kaynaklar(path.join(__dirname, '..', 'src', 'components'))) {
+    const s = fs.readFileSync(f, 'utf8');
+    if (/fixed inset-0[^"`']*\bbg-black\//.test(s)) kaba.push(`${f}: bg-black perde`);
+  }
+  assert.deepEqual(kaba, []);
+  const css = fs.readFileSync(path.join(__dirname, '..', 'src', 'index.css'), 'utf8');
+  assert.match(css, /\.modal-perde\s*{[^}]*var\(--perde\)/);
+});
