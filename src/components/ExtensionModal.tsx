@@ -218,7 +218,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
             </div>
 
             <div className="text-right shrink-0">
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-black/30 border border-white/10 text-white/80">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/30 border border-white/10 text-white/80">
                 Port: {port}
               </span>
             </div>

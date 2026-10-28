@@ -31,3 +31,14 @@ test('modal perdesi sabit bg-black yerine --perde token\'ından gelir', () => {
   const css = fs.readFileSync(path.join(__dirname, '..', 'src', 'index.css'), 'utf8');
   assert.match(css, /\.modal-perde\s*{[^}]*var\(--perde\)/);
 });
+
+test('arayüz metninde uzun tire, büyük harf CSS ve gizli satır işlemi yok', () => {
+  const kaba = [];
+  for (const f of kaynaklar(path.join(__dirname, '..', 'src'))) {
+    const s = fs.readFileSync(f, 'utf8');
+    if (/["'>]—["'<]/.test(s)) kaba.push(`${f}: uzun tire`);
+    if (/\buppercase\b/.test(s)) kaba.push(`${f}: uppercase`);
+    if (/opacity-0[^"`']*group-hover:opacity-100/.test(s)) kaba.push(`${f}: satır işlemi gizli`);
+  }
+  assert.deepEqual(kaba, []);
+});

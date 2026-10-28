@@ -64,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="w-56 bg-[#212429] border-r border-[#16181b] flex flex-col select-none text-[#cfd3dc] text-[13px] font-sans">
       {/* Sidebar header toggle */}
       <div className="h-10 px-3 flex items-center justify-between border-b border-[#16181b] text-[#8e95a5]">
-        <span className="text-xs font-medium tracking-wide uppercase opacity-60">
+        <span className="text-xs font-medium opacity-60">
           {t.sidebar.library}
         </span>
         <button className="hover:text-white transition-colors">
@@ -155,7 +155,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   e.stopPropagation();
                   onClearFinished();
                 }}
-                className="opacity-0 group-hover:opacity-100 p-0.5 hover:text-red-400 text-[#8e95a5] rounded transition-opacity"
+                className="tarus-satir-islem p-0.5 hover:text-red-400 text-[#8e95a5] rounded"
               >
                 <Trash2 size={12} />
               </button>
@@ -187,7 +187,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   e.stopPropagation();
                   onClearUnfinished();
                 }}
-                className="opacity-0 group-hover:opacity-100 p-0.5 hover:text-red-400 text-[#8e95a5] rounded transition-opacity"
+                className="tarus-satir-islem p-0.5 hover:text-red-400 text-[#8e95a5] rounded"
               >
                 <Trash2 size={12} />
               </button>
