@@ -30,7 +30,7 @@
 ## Kurulum
 
 ### Windows
-1. [GitHub Sürümler (Releases)](https://github.com/tarusatolye/indirme-yoneticisi/releases) sayfasından `İndirme Yöneticisi Setup 0.0.4.exe` dosyasını indirin.
+1. [GitHub Sürümler (Releases)](https://github.com/tarusatolye/indirme-yoneticisi/releases) sayfasından `İndirme Yöneticisi Setup 0.0.3.exe` dosyasını indirin.
 2. Kurulum sihirbazını başlatın ve kurulumu tamamlayın (veya kurulumsuz çalışan `Portable` sürümünü kullanabilirsiniz).
 3. Uygulama açıldığında masaüstü simgesinden veya sistem tepsisinden erişebilirsiniz.
 

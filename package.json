@@ -1,7 +1,7 @@
 {
   "name": "indirme-yoneticisi",
   "private": true,
-  "version": "0.0.4",
+  "version": "0.0.3",
   "description": "tarus indirme yöneticisi — hızlı ve açık kaynak kodlu indirme yöneticisi",
   "author": "tarusatolye <yazilim@tarus.tr>",
   "copyright": "Copyright © 2026 tarusatolye",
@@ -65,6 +65,15 @@
       "shortcutName": "İndirme Yöneticisi",
       "license": "build/license.txt"
     },
+    "protocols": [
+      {
+        "name": "Indirme Yoneticisi",
+        "schemes": [
+          "indirmeyoneticisi",
+          "tarus-dm"
+        ]
+      }
+    ],
     "mac": {
       "target": [
         "dmg",
