@@ -162,3 +162,47 @@ test('Auto-launch & retry flow: extension succeeds once app wakes up', async () 
     serverInstance.close();
   }
 });
+
+test('Windows portable registers protocol to the real exe, not the temp extraction dir', () => {
+  const registered = [];
+  const mockApp = {
+    setAsDefaultProtocolClient(proto, exe, args) {
+      registered.push([proto, exe, args]);
+    }
+  };
+  const origPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+  const origDefaultApp = process.defaultApp;
+  const origPortable = process.env.PORTABLE_EXECUTABLE_FILE;
+  try {
+    Object.defineProperty(process, 'platform', { value: 'win32' });
+    process.defaultApp = false;
+    process.env.PORTABLE_EXECUTABLE_FILE = 'D:\\Apps\\Indirme Yoneticisi.exe';
+    registerProtocolClients(mockApp);
+  } finally {
+    Object.defineProperty(process, 'platform', origPlatform);
+    process.defaultApp = origDefaultApp;
+    if (origPortable === undefined) delete process.env.PORTABLE_EXECUTABLE_FILE;
+    else process.env.PORTABLE_EXECUTABLE_FILE = origPortable;
+  }
+  assert.deepEqual(registered, PROTOCOL_NAMES.map(p => [p, 'D:\\Apps\\Indirme Yoneticisi.exe', []]));
+});
+
+test('Windows NSIS installer registers every protocol scheme before first launch', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const nsh = fs.readFileSync(path.join(__dirname, '..', 'build', 'installer.nsh'), 'utf8');
+  assert.match(nsh, /!macro customInstall/);
+  assert.match(nsh, /"URL Protocol" ""/);
+  assert.match(nsh, /shell\\open\\command" "" '"\$appExe" "%1"'/);
+  for (const proto of PROTOCOL_NAMES) {
+    assert.ok(nsh.includes(`!insertmacro registerUrlProtocol "${proto}"`), `${proto} not registered by installer`);
+  }
+});
+
+test('macOS bundle declares every protocol scheme (Info.plist CFBundleURLTypes) so a closed app can be launched', () => {
+  const pkg = require('../package.json');
+  const schemes = [].concat(...[].concat(pkg.build.protocols || []).map(p => p.schemes || []));
+  for (const proto of PROTOCOL_NAMES) {
+    assert.ok(schemes.includes(proto), `${proto} missing from build.protocols`);
+  }
+});

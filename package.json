@@ -65,6 +65,15 @@
       "shortcutName": "İndirme Yöneticisi",
       "license": "build/license.txt"
     },
+    "protocols": [
+      {
+        "name": "Indirme Yoneticisi",
+        "schemes": [
+          "indirmeyoneticisi",
+          "tarus-dm"
+        ]
+      }
+    ],
     "mac": {
       "target": [
         "dmg",
