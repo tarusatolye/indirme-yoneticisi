@@ -42,3 +42,19 @@ test('arayüz metninde uzun tire, büyük harf CSS ve gizli satır işlemi yok',
   }
   assert.deepEqual(kaba, []);
 });
+
+test('index.html ikon seti ve sabit başlık standarda uyar', () => {
+  const kok = path.join(__dirname, '..');
+  const html = fs.readFileSync(path.join(kok, 'index.html'), 'utf8');
+  assert.match(html, /<title>tarus İndirme Yöneticisi<\/title>/);
+  const ikonlar = [
+    [/<link rel="icon" href="\/favicon\.ico" sizes="48x48"/, 'favicon.ico'],
+    [/<link rel="icon" type="image\/svg\+xml" sizes="any" href="\/favicon\.svg"/, 'favicon.svg'],
+    [/<link rel="icon" type="image\/png" sizes="32x32" href="\/favicon-32\.png"/, 'favicon-32.png'],
+    [/<link rel="apple-touch-icon" sizes="180x180" href="\/apple-touch-icon\.png"/, 'apple-touch-icon.png'],
+  ];
+  for (const [desen, dosya] of ikonlar) {
+    assert.match(html, desen);
+    assert.ok(fs.existsSync(path.join(kok, 'public', dosya)), `public/${dosya} yok`);
+  }
+});
