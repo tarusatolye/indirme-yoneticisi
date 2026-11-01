@@ -21,7 +21,7 @@
     "message": "Launching Download Manager"
   },
   "notifLaunchingBody": {
-    "message": "The application is starting in the background, download will begin..."
+    "message": "If the browser asks to open the app, allow it; the download will then start."
   },
   "notifOfflineTitle": {
     "message": "Download Manager is not running"

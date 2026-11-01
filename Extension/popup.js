@@ -163,7 +163,8 @@ $('launch').onclick = async () => {
   $('launch').disabled = true;
   $('launch').textContent = '…';
   await send({ type: 'launchApp' });
-  for (let i = 0; i < 10; i++) {
+  // Leave time to answer the browser's "open app?" prompt.
+  for (let i = 0; i < 60; i++) {
     await new Promise((r) => setTimeout(r, 500));
     const s = await send({ type: 'status' });
     if (s && s.online) {

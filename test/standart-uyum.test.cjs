@@ -58,3 +58,15 @@ test('index.html ikon seti ve sabit başlık standarda uyar', () => {
     assert.ok(fs.existsSync(path.join(kok, 'public', dosya)), `public/${dosya} yok`);
   }
 });
+
+test('sürüm numarası yalnız package.json\'da yazılır; eklenti manifesti onunla aynıdır', () => {
+  const root = path.join(__dirname, '..');
+  const { version } = require('../package.json');
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'Extension', 'manifest.json'), 'utf8'));
+  assert.equal(manifest.version, version, 'npm run build Extension/manifest.json sürümünü eşitler');
+  const kaba = [];
+  for (const f of [...kaynaklar(path.join(root, 'src')), path.join(root, 'electron', 'server.cjs')]) {
+    if (/['"`>]v?\.?\d+\.\d+\.\d+['"`<]/.test(fs.readFileSync(f, 'utf8'))) kaba.push(f);
+  }
+  assert.deepEqual(kaba, []);
+});
