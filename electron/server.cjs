@@ -1,9 +1,10 @@
 const http = require('http');
+const { version: APP_VERSION } = require('../package.json');
 
 let extensionStatus = {
   lastPing: 0,
   browser: null,
-  version: '0.0.3'
+  version: APP_VERSION
 };
 
 function getExtensionStatus() {
@@ -51,7 +52,7 @@ function createServer(port, getDownloadsList, onAddDownload, onAction, onExtensi
       const downloads = getDownloadsList();
       const activeCount = downloads.filter(d => d.status === 'downloading').length;
       sendJson(200, {
-        version: '0.0.3',
+        version: APP_VERSION,
         active: activeCount,
         running: true,
         app: 'Download Manager',

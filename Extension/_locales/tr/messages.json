@@ -21,7 +21,7 @@
     "message": "İndirme Yöneticisi başlatılıyor"
   },
   "notifLaunchingBody": {
-    "message": "Uygulama arka planda açılıyor, indirme başlatılacak..."
+    "message": "Tarayıcı uygulamayı açmak için izin isterse onaylayın; indirme ardından başlayacak."
   },
   "notifOfflineTitle": {
     "message": "İndirme Yöneticisi çalışmıyor"

@@ -206,3 +206,18 @@ test('macOS bundle declares every protocol scheme (Info.plist CFBundleURLTypes) 
     assert.ok(schemes.includes(proto), `${proto} missing from build.protocols`);
   }
 });
+
+test('macOS bundle is sealed with an ad-hoc signature (unsealed bundles are reported as "damaged")', () => {
+  const pkg = require('../package.json');
+  assert.equal(pkg.build.mac.identity, '-');
+});
+
+test('Extension asks to launch the app in the current tab instead of a new tab that closes itself', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const src = fs.readFileSync(path.join(__dirname, '..', 'Extension', 'background.js'), 'utf8');
+  const launch = src.slice(src.indexOf('async function launchApp('), src.indexOf('// ---------- Capture file-type filter'));
+  assert.match(launch, /api\.tabs\.update\(target, \{ url: protocolUrl \}\)/);
+  assert.doesNotMatch(launch, /active: false/);
+  assert.doesNotMatch(launch, /, 1500\)/);
+});

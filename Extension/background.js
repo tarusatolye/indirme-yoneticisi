@@ -142,7 +142,7 @@ async function postToApp(settings, payload) {
   return j;
 }
 
-async function sendToApp({ url, filename, referer, kind }) {
+async function sendToApp({ url, filename, referer, kind, tabId }) {
   const settings = await getSettings();
   const ck = await cookiesFor(url);
   const payload = {
@@ -157,14 +157,16 @@ async function sendToApp({ url, filename, referer, kind }) {
     startProgress();
     return { ok: true };
   } catch (initialErr) {
-    // 2. App is offline: automatically launch in the background and retry
+    // 2. App is offline: launch it and retry. The browser may ask the user to allow the app first,
+    // so wait long enough for that answer.
     notify(t('notifLaunchingTitle'), t('notifLaunchingBody'));
-    await launchApp();
+    await launchApp(tabId);
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < LAUNCH_WAIT_TRIES; i++) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       const app = await ping(settings);
       if (app) {
+        closeLaunchTab();
         try {
           await postToApp(settings, payload);
           notify(kind === 'video' ? t('notifVideoTitle') : t('notifSentTitle'), filename || url);
@@ -177,13 +179,31 @@ async function sendToApp({ url, filename, referer, kind }) {
       }
     }
 
+    closeLaunchTab();
     notify(t('notifOfflineTitle'), t('notifOfflineBody'));
     return { ok: false, error: String(initialErr) };
   }
 }
 
+const LAUNCH_WAIT_TRIES = 60;  // × 500 ms: time for the user to answer the browser's "open app?" prompt
+let launchTabId = null;  // tab we opened only for the protocol prompt (fallback path)
+function closeLaunchTab() {
+  if (launchTabId == null) return;
+  try { api.tabs.remove(launchTabId); } catch {}
+  launchTabId = null;
+}
+
+// The tab the protocol prompt should appear on: the one the download came from, else the active one.
+async function promptTab(tabId) {
+  if (tabId != null && tabId >= 0) return tabId;
+  try {
+    const [tab] = await api.tabs.query({ active: true, lastFocusedWindow: true });
+    return tab?.id ?? null;
+  } catch { return null; }
+}
+
 // Launch the app through native messaging (Safari / registered host) or custom protocol
-async function launchApp() {
+async function launchApp(tabId) {
   let launched = false;
 
   // 1. Native messaging
@@ -200,21 +220,31 @@ async function launchApp() {
     }
   }
 
-  // 2. Custom protocol URL (indirmeyoneticisi://open)
-  if (!launched) {
-    try {
-      const protocolUrl = 'indirmeyoneticisi://open';
-      if (api.tabs?.create) {
-        const tab = await api.tabs.create({ url: protocolUrl, active: false });
-        if (tab?.id) {
-          setTimeout(() => {
-            try { api.tabs.remove(tab.id); } catch {}
-          }, 1500);
-        }
+  // 2. Custom protocol URL (indirmeyoneticisi://open). Pointing the current tab at it makes the
+  // browser show its "open app?" prompt over that page and leaves the page where it was.
+  if (!launched && api.tabs) {
+    const protocolUrl = 'indirmeyoneticisi://open';
+    const target = await promptTab(tabId);
+    if (target != null) {
+      try {
+        await api.tabs.update(target, { url: protocolUrl });
         launched = true;
+      } catch (e) {
+        console.warn('Failed to launch app via protocol in current tab:', e);
       }
-    } catch (e) {
-      console.warn('Failed to launch app via protocol:', e);
+    }
+    // No usable tab: open one in front so the prompt can be answered; it is closed once the app is up.
+    if (!launched) {
+      try {
+        closeLaunchTab();
+        const tab = await api.tabs.create({ url: protocolUrl, active: true });
+        launchTabId = tab?.id ?? null;
+        const opened = launchTabId;
+        setTimeout(() => { if (launchTabId === opened) closeLaunchTab(); }, LAUNCH_WAIT_TRIES * 500);
+        launched = true;
+      } catch (e) {
+        console.warn('Failed to launch app via protocol:', e);
+      }
     }
   }
 
@@ -413,10 +443,10 @@ api.runtime.onStartup?.addListener(() => { createMenus(); ping(); });
 menus?.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'dm-link') {
     const url = info.linkUrl || info.srcUrl;
-    if (url) sendToApp({ url, referer: info.pageUrl || tab?.url, kind: 'file' });
+    if (url) sendToApp({ url, referer: info.pageUrl || tab?.url, kind: 'file', tabId: tab?.id });
   } else if (info.menuItemId === 'dm-page-video') {
     const url = info.pageUrl || tab?.url;
-    if (url) sendToApp({ url, referer: url, kind: 'video' });
+    if (url) sendToApp({ url, referer: url, kind: 'video', tabId: tab?.id });
   }
 });
 
@@ -428,6 +458,7 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         case 'status': {
           const settings = await getSettings();
           const app = await ping(settings);
+          if (app) closeLaunchTab();
           sendResponse({ online: !!app, app, settings, clickIntercept: !api.downloads?.onDeterminingFilename, isSafari: IS_SAFARI, captureExtensions: (app && app.captureExtensions) || [] });
           break;
         }
@@ -455,7 +486,7 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         }
         case 'downloads': sendResponse(await getDownloads()); break;
         case 'action': sendResponse(await downloadAction(msg.id, msg.action)); break;
-        case 'download': sendResponse(await sendToApp(msg)); break;
+        case 'download': sendResponse(await sendToApp({ ...msg, tabId: sender.tab?.id ?? msg.tabId })); break;
         case 'setSettings': await setSettings(msg.settings || {}); sendResponse({ ok: true }); break;
         case 'launchApp': sendResponse({ ok: await launchApp() }); break;
         case 'pageMedia': {

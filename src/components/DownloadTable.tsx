@@ -21,6 +21,27 @@ import {
 import { DownloadItem, FileCategory } from "../types";
 import { translations } from "../i18n";
 
+// Size, status and speed columns are resizable; the name column takes the remaining width.
+type ColumnWidths = { size: number; status: number; speed: number };
+const DEFAULT_WIDTHS: ColumnWidths = { size: 160, status: 140, speed: 190 };
+const MIN_WIDTHS: ColumnWidths = { size: 90, status: 90, speed: 150 };
+const NAME_MIN_WIDTH = 180;
+const WIDTHS_KEY = "tarus-dm-column-widths";
+
+function loadWidths(): ColumnWidths {
+  try {
+    const saved = JSON.parse(localStorage.getItem(WIDTHS_KEY) || "null");
+    if (saved && typeof saved === "object") {
+      const w = { ...DEFAULT_WIDTHS };
+      for (const k of Object.keys(w) as (keyof ColumnWidths)[]) {
+        if (typeof saved[k] === "number") w[k] = Math.max(MIN_WIDTHS[k], saved[k]);
+      }
+      return w;
+    }
+  } catch {}
+  return { ...DEFAULT_WIDTHS };
+}
+
 interface DownloadTableProps {
   items: DownloadItem[];
   lang: "tr" | "en";
@@ -68,6 +89,56 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
   });
 
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const [widths, setWidths] = useState<ColumnWidths>(loadWidths);
+  const tableRef = useRef<HTMLDivElement>(null);
+  const gridTemplateColumns = `minmax(${NAME_MIN_WIDTH}px, 1fr) ${widths.size}px ${widths.status}px ${widths.speed}px`;
+
+  useEffect(() => {
+    try { localStorage.setItem(WIDTHS_KEY, JSON.stringify(widths)); } catch {}
+  }, [widths]);
+
+  // Drag the border to the left of `column`: the border follows the pointer, so that column and its
+  // left neighbour trade width (the name column on the far left simply absorbs the difference).
+  const startResize = (column: keyof ColumnWidths, e: React.PointerEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const startX = e.clientX;
+    const start = { ...widths };
+    const left: keyof ColumnWidths | null = column === "status" ? "size" : column === "speed" ? "status" : null;
+    const tableWidth = tableRef.current?.clientWidth ?? Infinity;
+    const onMove = (ev: PointerEvent) => {
+      let dx = ev.clientX - startX;
+      // Keep both sides of the border above their minimum width.
+      dx = Math.min(dx, start[column] - MIN_WIDTHS[column]);
+      if (left) dx = Math.max(dx, MIN_WIDTHS[left] - start[left]);
+      else dx = Math.max(dx, NAME_MIN_WIDTH + start.size + start.status + start.speed + 32 - tableWidth);
+      const next = { ...start, [column]: start[column] - dx };
+      if (left) next[left] = start[left] + dx;
+      setWidths(next);
+    };
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      document.body.style.cursor = "";
+    };
+    document.body.style.cursor = "col-resize";
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  };
+
+  const resizeHandle = (column: keyof ColumnWidths) => (
+    <div
+      role="separator"
+      aria-orientation="vertical"
+      title={t.table.resizeHint}
+      onPointerDown={(e) => startResize(column, e)}
+      onDoubleClick={() => setWidths({ ...DEFAULT_WIDTHS })}
+      className="absolute -left-[3px] top-0 h-full w-[6px] cursor-col-resize z-10 group/handle"
+    >
+      <div className="mx-auto h-full w-px bg-[#2d323b] group-hover/handle:bg-[#3b82f6] group-hover/handle:w-0.5" />
+    </div>
+  );
 
   // Close context menu on outside click or escape
   useEffect(() => {
@@ -188,6 +259,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
 
   return (
     <div
+      ref={tableRef}
       className="flex-1 flex flex-col overflow-hidden bg-[#181a1e] select-none text-[#d6d9e0] text-[13px] relative"
       onContextMenu={(e) => {
         // Prevent default browser menu if clicking background
@@ -197,11 +269,14 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
       }}
     >
       {/* Table Header */}
-      <div className="h-7 bg-[#212429] border-b border-[#2d323b] grid grid-cols-12 text-[#8e95a5] text-xs font-medium px-4 items-center">
-        <div className="col-span-6 border-r border-[#2d323b] pr-2">{t.table.name}</div>
-        <div className="col-span-2 border-r border-[#2d323b] px-3">{t.table.size}</div>
-        <div className="col-span-2 border-r border-[#2d323b] px-3">{t.table.status}</div>
-        <div className="col-span-2 px-3">{t.table.speed}</div>
+      <div
+        className="h-7 bg-[#212429] border-b border-[#2d323b] grid text-[#8e95a5] text-xs font-medium px-4 items-center"
+        style={{ gridTemplateColumns }}
+      >
+        <div className="pr-2 truncate">{t.table.name}</div>
+        <div className="relative h-full flex items-center px-3 truncate">{resizeHandle("size")}{t.table.size}</div>
+        <div className="relative h-full flex items-center px-3 truncate">{resizeHandle("status")}{t.table.status}</div>
+        <div className="relative h-full flex items-center px-3 truncate">{resizeHandle("speed")}{t.table.speed}</div>
       </div>
 
       {/* Table Body */}
@@ -222,7 +297,8 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 onClick={(e) => handleRowClick(item, e)}
                 onDoubleClick={() => onOpenDetail(item)}
                 onContextMenu={(e) => handleContextMenu(item, e)}
-                className={`grid grid-cols-12 items-center px-4 py-2 border-b border-[#212429] cursor-pointer transition-colors group ${
+                style={{ gridTemplateColumns }}
+                className={`grid items-center px-4 py-2 border-b border-[#212429] cursor-pointer transition-colors group ${
                   isSelected
                     ? "bg-[#28395a] text-white"
                     : isZebra
@@ -231,7 +307,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 }`}
               >
                 {/* Name Column */}
-                <div className="col-span-6 flex items-center space-x-3 pr-2 min-w-0">
+                <div className="flex items-center space-x-3 pr-2 min-w-0">
                   <div className="shrink-0">{getCategoryIcon(item.category)}</div>
                   <div className="min-w-0">
                     <div className="font-medium truncate text-[13px]">{item.fileName}</div>
@@ -247,7 +323,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 </div>
 
                 {/* Size Column */}
-                <div className="col-span-2 px-3 font-mono text-[12px] text-[#c0c5d1]">
+                <div className="px-3 min-w-0 font-mono text-[12px] text-[#c0c5d1]">
                   {item.state === "downloading" ? (
                     <div>
                       <div className="truncate text-[11px]">
@@ -275,7 +351,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 </div>
 
                 {/* Status Column */}
-                <div className="col-span-2 px-3 text-[12px]">
+                <div className="px-3 min-w-0 truncate text-[12px]">
                   <span
                     className={
                       item.state === "completed"
@@ -292,7 +368,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 </div>
 
                 {/* Speed Column + Actions on Hover */}
-                <div className="col-span-2 px-3 flex items-center justify-between min-w-0 font-mono text-[12px] text-[#c0c5d1]">
+                <div className="px-3 flex items-center justify-between min-w-0 font-mono text-[12px] text-[#c0c5d1]">
                   <span className="truncate text-[#62a4f8] font-semibold">
                     {item.state === "downloading" && item.speed > 0
                       ? formatSpeed(item.speed)
