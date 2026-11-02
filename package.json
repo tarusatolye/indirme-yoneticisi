@@ -63,6 +63,7 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "İndirme Yöneticisi",
+      "uninstallDisplayName": "İndirme Yöneticisi",
       "license": "build/license.txt"
     },
     "protocols": [
@@ -84,8 +85,12 @@
       "icon": "docs/icon.png",
       "category": "public.app-category.utilities",
       "artifactName": "Indirme-Yoneticisi-${version}-mac.${ext}",
+      "extraResources": [
+        { "from": "resources/mac", "to": "." }
+      ],
       "extendInfo": {
-        "CFBundleDisplayName": "İndirme Yöneticisi"
+        "CFBundleDisplayName": "Indirme Yoneticisi",
+        "LSHasLocalizedDisplayName": true
       }
     },
     "dmg": {
