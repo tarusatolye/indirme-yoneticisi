@@ -145,25 +145,25 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 modal-perde backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-[#24272d] border border-[#3b424e] rounded-xl w-full max-w-xl shadow-2xl overflow-hidden text-[#d4d8e2] text-xs font-sans">
+      <div className="bg-n24272d border border-n3b424e rounded-xl w-full max-w-xl shadow-2xl overflow-hidden text-nd4d8e2 text-xs font-sans">
         {/* Header */}
-        <div className="h-11 px-4 bg-[#1e2126] border-b border-[#323843] flex items-center justify-between select-none">
+        <div className="h-11 px-4 bg-n1e2126 border-b border-n323843 flex items-center justify-between select-none">
           <div className="flex items-center space-x-2.5">
             <div className="w-6 h-6 rounded-md bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
               <Puzzle size={14} />
             </div>
             <div>
-              <span className="font-semibold text-white text-[13px] block leading-tight">
+              <span className="font-semibold text-nwhite text-[13px] block leading-tight">
                 {t.title}
               </span>
-              <span className="text-[10px] text-[#8e95a5] block">
+              <span className="text-[10px] text-n8e95a5 block">
                 {t.subtitle}
               </span>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-[#8e95a5] hover:text-white p-1 rounded hover:bg-[#343a46] transition-colors"
+            className="text-n8e95a5 hover:text-nwhite p-1 rounded hover:bg-n343a46 transition-colors"
           >
             <X size={15} />
           </button>
@@ -218,7 +218,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
             </div>
 
             <div className="text-right shrink-0">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/30 border border-white/10 text-white/80">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-nwhite/10 border border-nwhite/10 text-nwhite/80">
                 Port: {port}
               </span>
             </div>
@@ -226,7 +226,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
 
           {/* Browser Selector Pills */}
           <div className="space-y-1.5 select-none">
-            <label className="text-[11px] font-medium text-[#8e95a5]">
+            <label className="text-[11px] font-medium text-n8e95a5">
               {t.selectBrowser}
             </label>
             <div className="grid grid-cols-5 gap-2">
@@ -239,8 +239,8 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
                     onClick={() => setSelectedBrowser(b.id)}
                     className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all text-center ${
                       isSelected
-                        ? "bg-[#2d333e] border-blue-500 text-white shadow-sm"
-                        : "bg-[#1c1e23] border-[#323843] text-[#8e95a5] hover:text-[#cfd3dc] hover:bg-[#252830]"
+                        ? "bg-n2d333e border-blue-500 text-nwhite shadow-sm"
+                        : "bg-n1c1e23 border-n323843 text-n8e95a5 hover:text-ncfd3dc hover:bg-n252830"
                     }`}
                   >
                     <div
@@ -259,24 +259,24 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
           </div>
 
           {/* 3 Step Interactive Setup Card */}
-          <div className="bg-[#1b1e23] border border-[#343a46] rounded-xl p-4 space-y-3.5">
-            <div className="text-xs font-semibold text-white flex items-center space-x-1.5">
+          <div className="bg-n1b1e23 border border-n343a46 rounded-xl p-4 space-y-3.5">
+            <div className="text-xs font-semibold text-nwhite flex items-center space-x-1.5">
               <span>Kurulum Adımları</span>
-              <span className="text-[11px] font-normal text-[#8e95a5]">
+              <span className="text-[11px] font-normal text-n8e95a5">
                 ({browsers.find((b) => b.id === selectedBrowser)?.name} için)
               </span>
             </div>
 
             {/* Step 1 */}
-            <div className="flex items-start space-x-3 bg-[#22252c] p-3 rounded-lg border border-[#303642]">
+            <div className="flex items-start space-x-3 bg-n22252c p-3 rounded-lg border border-n303642">
               <div className="w-5 h-5 rounded-full bg-blue-600/30 text-blue-400 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">
                 1
               </div>
               <div className="flex-1 space-y-1.5">
-                <div className="font-medium text-white text-[12px]">
+                <div className="font-medium text-nwhite text-[12px]">
                   {t.step1Title}
                 </div>
-                <p className="text-[11px] text-[#8e95a5] leading-relaxed">
+                <p className="text-[11px] text-n8e95a5 leading-relaxed">
                   {t.step1Desc}
                 </p>
                 <button
@@ -295,30 +295,30 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
             </div>
 
             {/* Step 2 */}
-            <div className="flex items-start space-x-3 bg-[#22252c] p-3 rounded-lg border border-[#303642]">
+            <div className="flex items-start space-x-3 bg-n22252c p-3 rounded-lg border border-n303642">
               <div className="w-5 h-5 rounded-full bg-blue-600/30 text-blue-400 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">
                 2
               </div>
               <div className="flex-1">
-                <div className="font-medium text-white text-[12px]">
+                <div className="font-medium text-nwhite text-[12px]">
                   {t.step2Title}
                 </div>
-                <p className="text-[11px] text-[#8e95a5] leading-relaxed mt-0.5">
+                <p className="text-[11px] text-n8e95a5 leading-relaxed mt-0.5">
                   {t.step2Desc}
                 </p>
               </div>
             </div>
 
             {/* Step 3 */}
-            <div className="flex items-start space-x-3 bg-[#22252c] p-3 rounded-lg border border-[#303642]">
+            <div className="flex items-start space-x-3 bg-n22252c p-3 rounded-lg border border-n303642">
               <div className="w-5 h-5 rounded-full bg-blue-600/30 text-blue-400 font-bold flex items-center justify-center text-[11px] shrink-0 mt-0.5">
                 3
               </div>
               <div className="flex-1 space-y-2">
-                <div className="font-medium text-white text-[12px]">
+                <div className="font-medium text-nwhite text-[12px]">
                   {t.step3Title}
                 </div>
-                <p className="text-[11px] text-[#8e95a5] leading-relaxed">
+                <p className="text-[11px] text-n8e95a5 leading-relaxed">
                   {t.step3Desc}
                 </p>
 
@@ -326,7 +326,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
                   <button
                     type="button"
                     onClick={handleOpenFolder}
-                    className="inline-flex items-center space-x-1.5 bg-[#2d323b] hover:bg-[#383e4a] text-white px-3 py-1.5 rounded-md border border-[#3f4654] transition-colors"
+                    className="inline-flex items-center space-x-1.5 bg-n2d323b hover:bg-n383e4a text-nwhite px-3 py-1.5 rounded-md border border-n3f4654 transition-colors"
                   >
                     <FolderOpen size={12} className="text-amber-400" />
                     <span>{t.btnOpenFolder}</span>
@@ -335,7 +335,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
                   <button
                     type="button"
                     onClick={handleCopyPath}
-                    className="inline-flex items-center space-x-1.5 bg-[#2d323b] hover:bg-[#383e4a] text-[#cfd3dc] px-3 py-1.5 rounded-md border border-[#3f4654] transition-colors"
+                    className="inline-flex items-center space-x-1.5 bg-n2d323b hover:bg-n383e4a text-ncfd3dc px-3 py-1.5 rounded-md border border-n3f4654 transition-colors"
                   >
                     {copied ? (
                       <Check size={12} className="text-emerald-400" />
@@ -347,7 +347,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
                 </div>
 
                 {info?.path && (
-                  <div className="bg-[#181a1e] p-2 rounded border border-[#2d333e] font-mono text-[10px] text-[#8e95a5] break-all select-all">
+                  <div className="bg-n181a1e p-2 rounded border border-n2d333e font-mono text-[10px] text-n8e95a5 break-all select-all">
                     {info.path}
                   </div>
                 )}
@@ -365,8 +365,8 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="h-12 px-5 bg-[#1e2126] border-t border-[#323843] flex items-center justify-between select-none">
-          <div className="flex items-center space-x-1.5 text-[11px] text-[#8e95a5]">
+        <div className="h-12 px-5 bg-n1e2126 border-t border-n323843 flex items-center justify-between select-none">
+          <div className="flex items-center space-x-1.5 text-[11px] text-n8e95a5">
             <RefreshCw size={11} className="animate-spin text-blue-400" />
             <span>Otomatik algılama devrede</span>
           </div>
@@ -374,7 +374,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-1.5 bg-[#2d323b] hover:bg-[#383e4a] text-white rounded-md border border-[#3f4654] transition-colors font-medium text-xs"
+            className="px-4 py-1.5 bg-n2d323b hover:bg-n383e4a text-nwhite rounded-md border border-n3f4654 transition-colors font-medium text-xs"
           >
             {t.close}
           </button>

@@ -136,7 +136,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
       onDoubleClick={() => setWidths({ ...DEFAULT_WIDTHS })}
       className="absolute -left-[3px] top-0 h-full w-[6px] cursor-col-resize z-10 group/handle"
     >
-      <div className="mx-auto h-full w-px bg-[#2d323b] group-hover/handle:bg-[#3b82f6] group-hover/handle:w-0.5" />
+      <div className="mx-auto h-full w-px bg-n2d323b group-hover/handle:bg-[#3b82f6] group-hover/handle:w-0.5" />
     </div>
   );
 
@@ -177,13 +177,13 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
 
   const getCategoryIcon = (category: FileCategory) => {
     switch (category) {
-      case "image": return <ImageIcon size={18} className="text-[#8e95a5]" />;
-      case "music": return <Music size={18} className="text-[#8e95a5]" />;
-      case "video": return <Film size={18} className="text-[#8e95a5]" />;
-      case "apps": return <LayoutGrid size={18} className="text-[#8e95a5]" />;
-      case "document": return <FileText size={18} className="text-[#8e95a5]" />;
-      case "compressed": return <Archive size={18} className="text-[#8e95a5]" />;
-      default: return <File size={18} className="text-[#8e95a5]" />;
+      case "image": return <ImageIcon size={18} className="text-n8e95a5" />;
+      case "music": return <Music size={18} className="text-n8e95a5" />;
+      case "video": return <Film size={18} className="text-n8e95a5" />;
+      case "apps": return <LayoutGrid size={18} className="text-n8e95a5" />;
+      case "document": return <FileText size={18} className="text-n8e95a5" />;
+      case "compressed": return <Archive size={18} className="text-n8e95a5" />;
+      default: return <File size={18} className="text-n8e95a5" />;
     }
   };
 
@@ -260,7 +260,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
   return (
     <div
       ref={tableRef}
-      className="flex-1 flex flex-col overflow-hidden bg-[#181a1e] select-none text-[#d6d9e0] text-[13px] relative"
+      className="flex-1 flex flex-col overflow-hidden bg-n181a1e select-none text-nd6d9e0 text-[13px] relative"
       onContextMenu={(e) => {
         // Prevent default browser menu if clicking background
         if ((e.target as HTMLElement).tagName !== "INPUT") {
@@ -270,7 +270,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
     >
       {/* Table Header */}
       <div
-        className="h-7 bg-[#212429] border-b border-[#2d323b] grid text-[#8e95a5] text-xs font-medium px-4 items-center"
+        className="h-7 bg-n212429 border-b border-n2d323b grid text-n8e95a5 text-xs font-medium px-4 items-center"
         style={{ gridTemplateColumns }}
       >
         <div className="pr-2 truncate">{t.table.name}</div>
@@ -282,7 +282,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
       {/* Table Body */}
       <div className="flex-1 overflow-y-auto">
         {items.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-[#6e7687] text-center p-8 space-y-3">
+          <div className="h-full flex flex-col items-center justify-center text-n6e7687 text-center p-8 space-y-3">
             <FileText size={42} className="opacity-40" />
             <p className="whitespace-pre-line text-sm max-w-sm leading-relaxed">{t.emptyState}</p>
           </div>
@@ -298,12 +298,12 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 onDoubleClick={() => onOpenDetail(item)}
                 onContextMenu={(e) => handleContextMenu(item, e)}
                 style={{ gridTemplateColumns }}
-                className={`grid items-center px-4 py-2 border-b border-[#212429] cursor-pointer transition-colors group ${
+                className={`grid items-center px-4 py-2 border-b border-n212429 cursor-pointer transition-colors group ${
                   isSelected
-                    ? "bg-[#28395a] text-white"
+                    ? "bg-n28395a text-nwhite"
                     : isZebra
-                    ? "bg-[#1d2025] hover:bg-[#252930]"
-                    : "bg-[#181a1e] hover:bg-[#252930]"
+                    ? "bg-n1d2025 hover:bg-n252930"
+                    : "bg-n181a1e hover:bg-n252930"
                 }`}
               >
                 {/* Name Column */}
@@ -311,7 +311,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                   <div className="shrink-0">{getCategoryIcon(item.category)}</div>
                   <div className="min-w-0">
                     <div className="font-medium truncate text-[13px]">{item.fileName}</div>
-                    <div className="text-[11px] text-[#8e95a5] truncate">
+                    <div className="text-[11px] text-n8e95a5 truncate">
                       {getCategoryLabel(item.category)}
                       {item.state === "downloading" && (
                         <span className="text-[#62a4f8] ml-1.5 font-medium">
@@ -323,7 +323,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 </div>
 
                 {/* Size Column */}
-                <div className="px-3 min-w-0 font-mono text-[12px] text-[#c0c5d1]">
+                <div className="px-3 min-w-0 font-mono text-[12px] text-nc0c5d1">
                   {item.state === "downloading" ? (
                     <div>
                       <div className="truncate text-[11px]">
@@ -332,7 +332,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                           : formatSize(item.receivedBytes)}
                       </div>
                       {item.totalBytes > 0 && (
-                        <div className="w-full bg-[#2d323b] h-1.5 rounded-full mt-1 overflow-hidden">
+                        <div className="w-full bg-n2d323b h-1.5 rounded-full mt-1 overflow-hidden">
                           <div
                             className="bg-[#3b82f6] h-full transition-all duration-300 rounded-full"
                             style={{
@@ -360,7 +360,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                         ? "text-[#62a4f8] font-medium"
                         : item.state === "failed"
                         ? "text-[#f87171]"
-                        : "text-[#8e95a5]"
+                        : "text-n8e95a5"
                     }
                   >
                     {getStatusLabel(item)}
@@ -368,7 +368,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 </div>
 
                 {/* Speed Column + Actions on Hover */}
-                <div className="px-3 flex items-center justify-between min-w-0 font-mono text-[12px] text-[#c0c5d1]">
+                <div className="px-3 flex items-center justify-between min-w-0 font-mono text-[12px] text-nc0c5d1">
                   <span className="truncate text-[#62a4f8] font-semibold">
                     {item.state === "downloading" && item.speed > 0
                       ? formatSpeed(item.speed)
@@ -385,7 +385,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                         e.stopPropagation();
                         onOpenDetail(item);
                       }}
-                      className="p-1 hover:text-white text-[#8e95a5] rounded hover:bg-[#343a46]"
+                      className="p-1 hover:text-nwhite text-n8e95a5 rounded hover:bg-n343a46"
                     >
                       <Info size={14} />
                     </button>
@@ -396,7 +396,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                           e.stopPropagation();
                           onPause(item.id);
                         }}
-                        className="p-1 hover:text-white text-[#8e95a5] rounded hover:bg-[#343a46]"
+                        className="p-1 hover:text-nwhite text-n8e95a5 rounded hover:bg-n343a46"
                       >
                         <Pause size={14} />
                       </button>
@@ -407,7 +407,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                           e.stopPropagation();
                           onResume(item.id);
                         }}
-                        className="p-1 hover:text-white text-[#8e95a5] rounded hover:bg-[#343a46]"
+                        className="p-1 hover:text-nwhite text-n8e95a5 rounded hover:bg-n343a46"
                       >
                         <Play size={14} />
                       </button>
@@ -418,7 +418,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                         e.stopPropagation();
                         onOpenFolder(item.savePath);
                       }}
-                      className="p-1 hover:text-white text-[#8e95a5] rounded hover:bg-[#343a46]"
+                      className="p-1 hover:text-nwhite text-n8e95a5 rounded hover:bg-n343a46"
                     >
                       <FolderOpen size={14} />
                     </button>
@@ -428,7 +428,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                         e.stopPropagation();
                         onDelete(item.id);
                       }}
-                      className="p-1 hover:text-red-400 text-[#8e95a5] rounded hover:bg-[#343a46]"
+                      className="p-1 hover:text-red-400 text-n8e95a5 rounded hover:bg-n343a46"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -445,7 +445,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
         <div
           ref={menuRef}
           style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }}
-          className="fixed z-50 w-56 bg-[#212429] border border-[#343a46] rounded-lg shadow-2xl py-1 text-xs text-[#d6d9e0] font-sans divide-y divide-[#2c313a]"
+          className="fixed z-50 w-56 bg-n212429 border border-n343a46 rounded-lg shadow-2xl py-1 text-xs text-nd6d9e0 font-sans divide-y divide-n2c313a"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Section 1: File Actions */}
@@ -456,7 +456,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                   onOpenFile(contextMenu.item!.savePath);
                   setContextMenu((prev) => ({ ...prev, visible: false }));
                 }}
-                className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-[#2c374d] hover:text-white text-left font-medium text-blue-300"
+                className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite text-left font-medium text-blue-300"
               >
                 <FileDown size={14} className="text-blue-400" />
                 <span>{t.contextMenu.openFile}</span>
@@ -468,9 +468,9 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 onOpenFolder(contextMenu.item!.savePath);
                 setContextMenu((prev) => ({ ...prev, visible: false }));
               }}
-              className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-[#2c374d] hover:text-white text-left"
+              className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite text-left"
             >
-              <FolderOpen size={14} className="text-[#8e95a5]" />
+              <FolderOpen size={14} className="text-n8e95a5" />
               <span>{t.contextMenu.openFolder}</span>
             </button>
           </div>
@@ -483,7 +483,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                   onPause(contextMenu.item!.id);
                   setContextMenu((prev) => ({ ...prev, visible: false }));
                 }}
-                className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-[#2c374d] hover:text-white text-left"
+                className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite text-left"
               >
                 <Pause size={14} className="text-amber-400" />
                 <span>{t.contextMenu.pause}</span>
@@ -494,7 +494,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                   onResume(contextMenu.item!.id);
                   setContextMenu((prev) => ({ ...prev, visible: false }));
                 }}
-                className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-[#2c374d] hover:text-white text-left"
+                className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite text-left"
               >
                 <Play size={14} className="text-emerald-400" />
                 <span>{t.contextMenu.resume}</span>
@@ -507,7 +507,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                   onRedownload(contextMenu.item!);
                   setContextMenu((prev) => ({ ...prev, visible: false }));
                 }}
-                className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-[#2c374d] hover:text-white text-left"
+                className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite text-left"
               >
                 <RotateCw size={14} className="text-blue-400" />
                 <span>{t.contextMenu.redownload}</span>
@@ -519,9 +519,9 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
           <div className="py-1">
             <button
               onClick={() => handleCopyUrl(contextMenu.item!.url)}
-              className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-[#2c374d] hover:text-white text-left"
+              className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite text-left"
             >
-              <Copy size={14} className="text-[#8e95a5]" />
+              <Copy size={14} className="text-n8e95a5" />
               <span>{t.contextMenu.copyUrl}</span>
             </button>
 
@@ -530,9 +530,9 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 onOpenDetail(contextMenu.item!);
                 setContextMenu((prev) => ({ ...prev, visible: false }));
               }}
-              className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-[#2c374d] hover:text-white text-left"
+              className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite text-left"
             >
-              <Info size={14} className="text-[#8e95a5]" />
+              <Info size={14} className="text-n8e95a5" />
               <span>{t.contextMenu.showDetails}</span>
             </button>
           </div>
@@ -544,7 +544,7 @@ export const DownloadTable: React.FC<DownloadTableProps> = ({
                 onDelete(contextMenu.item!.id, false);
                 setContextMenu((prev) => ({ ...prev, visible: false }));
               }}
-              className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-[#2c374d] hover:text-white text-left text-red-300"
+              className="w-full flex items-center space-x-2 px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite text-left text-red-300"
             >
               <Trash2 size={14} className="text-red-400" />
               <span>{t.contextMenu.removeFromList}</span>

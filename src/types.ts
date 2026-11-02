@@ -54,6 +54,7 @@ export interface AppSettings {
   port: number;
   ytdlp_path: string;
   language: "tr" | "en";
+  theme?: ThemeMode;
   autoCloseDetail?: boolean;
 }
 
@@ -75,3 +76,5 @@ export interface ExtensionInfo {
   browser: string | null;
   port: number;
 }
+
+export type ThemeMode = "system" | "light" | "dark";

@@ -48,16 +48,16 @@ export const AddDownloadModal: React.FC<AddDownloadModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 modal-perde backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-[#24272d] border border-[#3b424e] rounded-xl w-full max-w-md shadow-2xl overflow-hidden text-[#d4d8e2] text-xs font-sans">
+      <div className="bg-n24272d border border-n3b424e rounded-xl w-full max-w-md shadow-2xl overflow-hidden text-nd4d8e2 text-xs font-sans">
         {/* Header */}
-        <div className="h-9 px-4 bg-[#1e2126] border-b border-[#323843] flex items-center justify-between select-none">
+        <div className="h-9 px-4 bg-n1e2126 border-b border-n323843 flex items-center justify-between select-none">
           <div className="flex items-center space-x-2">
             <Link2 size={14} className="text-blue-400" />
-            <span className="font-medium text-white">{t.title}</span>
+            <span className="font-medium text-nwhite">{t.title}</span>
           </div>
           <button
             onClick={onClose}
-            className="text-[#8e95a5] hover:text-white p-1 rounded hover:bg-[#343a46] transition-colors"
+            className="text-n8e95a5 hover:text-nwhite p-1 rounded hover:bg-n343a46 transition-colors"
           >
             <X size={14} />
           </button>
@@ -66,7 +66,7 @@ export const AddDownloadModal: React.FC<AddDownloadModalProps> = ({
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-4 space-y-3.5">
           <div className="space-y-1">
-            <label className="text-[#8e95a5] font-medium">{t.urlLabel}</label>
+            <label className="text-n8e95a5 font-medium">{t.urlLabel}</label>
             <input
               type="url"
               required
@@ -74,18 +74,18 @@ export const AddDownloadModal: React.FC<AddDownloadModalProps> = ({
               value={url}
               onChange={(e) => handleUrlChange(e.target.value)}
               placeholder="https://..."
-              className="w-full bg-[#181a1e] border border-[#343a46] rounded-md px-3 py-1.5 text-xs text-white placeholder-[#6f7787] focus:outline-none focus:border-blue-500 font-mono transition-colors"
+              className="w-full bg-n181a1e border border-n343a46 rounded-md px-3 py-1.5 text-xs text-nwhite placeholder-n6f7787 focus:outline-none focus:border-blue-500 font-mono transition-colors"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-[#8e95a5] font-medium">{t.nameLabel}</label>
+            <label className="text-n8e95a5 font-medium">{t.nameLabel}</label>
             <input
               type="text"
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
               placeholder="example.zip"
-              className="w-full bg-[#181a1e] border border-[#343a46] rounded-md px-3 py-1.5 text-xs text-white placeholder-[#6f7787] focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-n181a1e border border-n343a46 rounded-md px-3 py-1.5 text-xs text-nwhite placeholder-n6f7787 focus:outline-none focus:border-blue-500 transition-colors"
             />
           </div>
 
@@ -95,17 +95,17 @@ export const AddDownloadModal: React.FC<AddDownloadModalProps> = ({
                 type="checkbox"
                 checked={isVideo}
                 onChange={(e) => setIsVideo(e.target.checked)}
-                className="rounded bg-[#181a1e] border-[#343a46] text-blue-600 focus:ring-0"
+                className="rounded bg-n181a1e border-n343a46 text-blue-600 focus:ring-0"
               />
-              <span className="text-[#cfd3dc]">{t.isVideo}</span>
+              <span className="text-ncfd3dc">{t.isVideo}</span>
             </label>
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-2 border-t border-[#323843]">
+          <div className="flex items-center justify-end space-x-2 pt-2 border-t border-n323843">
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1 bg-[#2d323b] hover:bg-[#383e4a] text-[#cfd3dc] rounded border border-[#3b424e] transition-colors"
+              className="px-3 py-1 bg-n2d323b hover:bg-n383e4a text-ncfd3dc rounded border border-n3b424e transition-colors"
             >
               {t.cancel}
             </button>

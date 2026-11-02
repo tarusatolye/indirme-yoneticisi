@@ -61,13 +61,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const unfinishedCount = getCount("unfinished");
 
   return (
-    <aside className="w-56 bg-[#212429] border-r border-[#16181b] flex flex-col select-none text-[#cfd3dc] text-[13px] font-sans">
+    <aside className="w-56 bg-n212429 border-r border-n16181b flex flex-col select-none text-ncfd3dc text-[13px] font-sans">
       {/* Sidebar header toggle */}
-      <div className="h-10 px-3 flex items-center justify-between border-b border-[#16181b] text-[#8e95a5]">
+      <div className="h-10 px-3 flex items-center justify-between border-b border-n16181b text-n8e95a5">
         <span className="text-xs font-medium opacity-60">
           {t.sidebar.library}
         </span>
-        <button className="hover:text-white transition-colors">
+        <button className="hover:text-nwhite transition-colors">
           <PanelLeftClose size={15} />
         </button>
       </div>
@@ -78,8 +78,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => onSelectCategory("all")}
           className={`flex items-center justify-between px-2.5 py-1.5 rounded-md cursor-pointer transition-colors ${
             selectedCategory === "all"
-              ? "bg-[#333a46] text-white font-medium"
-              : "hover:bg-[#282c33] text-[#cfd3dc]"
+              ? "bg-n333a46 text-nwhite font-medium"
+              : "hover:bg-n282c33 text-ncfd3dc"
           }`}
         >
           <div className="flex items-center space-x-2">
@@ -88,15 +88,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 e.stopPropagation();
                 setCategoriesOpen(!categoriesOpen);
               }}
-              className="text-[#8e95a5] hover:text-white p-0.5"
+              className="text-n8e95a5 hover:text-nwhite p-0.5"
             >
               {categoriesOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
             </button>
-            <Folder size={16} className="text-[#8e95a5]" />
+            <Folder size={16} className="text-n8e95a5" />
             <span>{t.sidebar.all}</span>
           </div>
           {allCount > 0 && (
-            <span className="text-xs text-[#8e95a5] font-mono">{allCount}</span>
+            <span className="text-xs text-n8e95a5 font-mono">{allCount}</span>
           )}
         </div>
 
@@ -112,16 +112,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => onSelectCategory(cat.id)}
                   className={`flex items-center justify-between px-2 py-1.5 rounded-md cursor-pointer transition-colors ${
                     isSelected
-                      ? "bg-[#333a46] text-white font-medium"
-                      : "hover:bg-[#282c33] text-[#a9b0c0]"
+                      ? "bg-n333a46 text-nwhite font-medium"
+                      : "hover:bg-n282c33 text-na9b0c0"
                   }`}
                 >
                   <div className="flex items-center space-x-2.5">
-                    <span className="text-[#8e95a5]">{cat.icon}</span>
+                    <span className="text-n8e95a5">{cat.icon}</span>
                     <span>{cat.label}</span>
                   </div>
                   {count > 0 && (
-                    <span className="text-xs text-[#8e95a5] font-mono">{count}</span>
+                    <span className="text-xs text-n8e95a5 font-mono">{count}</span>
                   )}
                 </div>
               );
@@ -131,7 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Separator */}
         <div className="pt-2 pb-1">
-          <div className="h-px bg-[#2d323b] mx-2" />
+          <div className="h-px bg-n2d323b mx-2" />
         </div>
 
         {/* Finished */}
@@ -139,12 +139,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => onSelectCategory("finished")}
           className={`flex items-center justify-between px-2.5 py-1.5 rounded-md cursor-pointer transition-colors group ${
             selectedCategory === "finished"
-              ? "bg-[#333a46] text-white font-medium"
-              : "hover:bg-[#282c33] text-[#cfd3dc]"
+              ? "bg-n333a46 text-nwhite font-medium"
+              : "hover:bg-n282c33 text-ncfd3dc"
           }`}
         >
           <div className="flex items-center space-x-2.5 pl-4">
-            <CheckCircle2 size={15} className="text-[#8e95a5]" />
+            <CheckCircle2 size={15} className="text-n8e95a5" />
             <span>{t.sidebar.finished}</span>
           </div>
           <div className="flex items-center space-x-1.5">
@@ -155,13 +155,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   e.stopPropagation();
                   onClearFinished();
                 }}
-                className="tarus-satir-islem p-0.5 hover:text-red-400 text-[#8e95a5] rounded"
+                className="tarus-satir-islem p-0.5 hover:text-red-400 text-n8e95a5 rounded"
               >
                 <Trash2 size={12} />
               </button>
             )}
             {finishedCount > 0 && (
-              <span className="text-xs text-[#8e95a5] font-mono">{finishedCount}</span>
+              <span className="text-xs text-n8e95a5 font-mono">{finishedCount}</span>
             )}
           </div>
         </div>
@@ -171,12 +171,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => onSelectCategory("unfinished")}
           className={`flex items-center justify-between px-2.5 py-1.5 rounded-md cursor-pointer transition-colors group ${
             selectedCategory === "unfinished"
-              ? "bg-[#333a46] text-white font-medium"
-              : "hover:bg-[#282c33] text-[#cfd3dc]"
+              ? "bg-n333a46 text-nwhite font-medium"
+              : "hover:bg-n282c33 text-ncfd3dc"
           }`}
         >
           <div className="flex items-center space-x-2.5 pl-4">
-            <History size={15} className="text-[#8e95a5]" />
+            <History size={15} className="text-n8e95a5" />
             <span>{t.sidebar.unfinished}</span>
           </div>
           <div className="flex items-center space-x-1.5">
@@ -187,13 +187,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   e.stopPropagation();
                   onClearUnfinished();
                 }}
-                className="tarus-satir-islem p-0.5 hover:text-red-400 text-[#8e95a5] rounded"
+                className="tarus-satir-islem p-0.5 hover:text-red-400 text-n8e95a5 rounded"
               >
                 <Trash2 size={12} />
               </button>
             )}
             {unfinishedCount > 0 && (
-              <span className="text-xs text-[#8e95a5] font-mono">{unfinishedCount}</span>
+              <span className="text-xs text-n8e95a5 font-mono">{unfinishedCount}</span>
             )}
           </div>
         </div>

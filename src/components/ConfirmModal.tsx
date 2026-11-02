@@ -22,16 +22,16 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({ message, confirmLabe
       <div
         role="alertdialog"
         aria-modal="true"
-        className="w-[360px] max-w-[90vw] bg-[#22252b] border border-[#343a46] rounded-xl p-4 shadow-2xl"
+        className="w-[360px] max-w-[90vw] bg-n22252b border border-n343a46 rounded-xl p-4 shadow-2xl"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <p className="text-sm text-white mb-4">{message}</p>
+        <p className="text-sm text-nwhite mb-4">{message}</p>
         <div className="flex justify-end space-x-2">
           <button
             type="button"
             autoFocus
             onClick={onCancel}
-            className="px-3 py-1.5 text-xs rounded-md border border-[#343a46] text-[#c5cad6] hover:bg-[#2c374d]"
+            className="px-3 py-1.5 text-xs rounded-md border border-n343a46 text-nc5cad6 hover:bg-n2c374d"
           >
             {cancelLabel}
           </button>
