@@ -34,6 +34,7 @@ export const App: React.FC = () => {
     port: 48213,
     ytdlp_path: "yt-dlp",
     language: "tr",
+    theme: "system",
   });
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -47,6 +48,19 @@ export const App: React.FC = () => {
   const [extensionInfo, setExtensionInfo] = useState<ExtensionInfo | null>(null);
   const [detailItem, setDetailItem] = useState<DownloadItem | null>(null);
   const [updateDownloadedVersion, setUpdateDownloadedVersion] = useState<string | null>(null);
+
+  // Tema: sistem seçiliyken işletim sistemi temasını izler.
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: light)");
+    const apply = () => {
+      const mode = settings.theme || "system";
+      const light = mode === "light" || (mode === "system" && mq.matches);
+      document.documentElement.dataset.theme = light ? "light" : "dark";
+    };
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, [settings.theme]);
 
   const lang = settings.language || "tr";
   const t = translations[lang];
@@ -317,9 +331,9 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#181a1e] text-[#d6d9e0] flex-col overflow-hidden font-sans select-none">
+    <div className="flex h-screen bg-n181a1e text-nd6d9e0 flex-col overflow-hidden font-sans select-none">
       {/* Top macOS Style Toolbar matching docs/main.png */}
-      <header className="h-12 bg-[#212429] border-b border-[#16181b] px-4 flex items-center justify-between shrink-0">
+      <header className="h-12 bg-n212429 border-b border-n16181b px-4 flex items-center justify-between shrink-0">
         {/* App Title with tarus Brand Mark */}
         <div className="flex items-center space-x-2.5">
           <svg
@@ -340,17 +354,17 @@ export const App: React.FC = () => {
               <path strokeLinejoin="round" d="M12 2L12 15M15 11.5L12 15L9 11.5" />
             </g>
           </svg>
-          <h1 className="text-sm font-semibold tracking-wide text-white">
+          <h1 className="text-sm font-semibold tracking-wide text-nwhite">
             {t.appTitle}
           </h1>
         </div>
 
         {/* Action Button Group (Compact Pill Toolbar) */}
-        <div className="flex items-center space-x-1.5 bg-[#2b3038] p-1 rounded-lg border border-[#373d47]">
+        <div className="flex items-center space-x-1.5 bg-n2b3038 p-1 rounded-lg border border-n373d47">
           <button
             onClick={() => setIsAddOpen(true)}
             title={t.toolbar.addUrl}
-            className="p-1.5 text-[#cfd3dc] hover:text-white hover:bg-[#383f4b] rounded transition-colors"
+            className="p-1.5 text-ncfd3dc hover:text-nwhite hover:bg-n383f4b rounded transition-colors"
           >
             <div className="relative">
               <Link2 size={16} />
@@ -361,7 +375,7 @@ export const App: React.FC = () => {
           <button
             onClick={handleResumeAll}
             title={t.toolbar.startQueue}
-            className="p-1.5 text-[#cfd3dc] hover:text-white hover:bg-[#383f4b] rounded transition-colors"
+            className="p-1.5 text-ncfd3dc hover:text-nwhite hover:bg-n383f4b rounded transition-colors"
           >
             <Play size={15} />
           </button>
@@ -369,7 +383,7 @@ export const App: React.FC = () => {
           <button
             onClick={handlePauseAll}
             title={t.toolbar.stopAll}
-            className="p-1.5 text-[#cfd3dc] hover:text-white hover:bg-[#383f4b] rounded transition-colors"
+            className="p-1.5 text-ncfd3dc hover:text-nwhite hover:bg-n383f4b rounded transition-colors"
           >
             <Square size={14} />
           </button>
@@ -380,14 +394,14 @@ export const App: React.FC = () => {
               <button
                 onClick={handleClearFinished}
                 title={t.toolbar.clearFinished}
-                className="p-1.5 text-[#cfd3dc] hover:text-white hover:bg-[#383f4b] rounded-l transition-colors"
+                className="p-1.5 text-ncfd3dc hover:text-nwhite hover:bg-n383f4b rounded-l transition-colors"
               >
                 <Trash2 size={15} />
               </button>
               <button
                 onClick={() => setClearMenuOpen(!clearMenuOpen)}
                 title="Temizleme Seçenekleri"
-                className="p-1 text-[#8e95a5] hover:text-white hover:bg-[#383f4b] rounded-r border-l border-[#373d47] transition-colors"
+                className="p-1 text-n8e95a5 hover:text-nwhite hover:bg-n383f4b rounded-r border-l border-n373d47 transition-colors"
               >
                 <ChevronDown size={11} />
               </button>
@@ -395,28 +409,28 @@ export const App: React.FC = () => {
 
             {clearMenuOpen && (
               <div
-                className="absolute right-0 top-full mt-1.5 w-52 bg-[#212429] border border-[#373d47] rounded-lg shadow-xl py-1 z-50 text-xs text-[#d6d9e0]"
+                className="absolute right-0 top-full mt-1.5 w-52 bg-n212429 border border-n373d47 rounded-lg shadow-xl py-1 z-50 text-xs text-nd6d9e0"
                 onMouseLeave={() => setClearMenuOpen(false)}
               >
                 <button
                   onClick={handleClearFinished}
-                  className="w-full text-left px-3 py-1.5 hover:bg-[#2c374d] hover:text-white flex items-center justify-between"
+                  className="w-full text-left px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite flex items-center justify-between"
                 >
                   <span>{t.toolbar.clearFinished}</span>
-                  <span className="text-[11px] text-[#8e95a5] font-mono">
+                  <span className="text-[11px] text-n8e95a5 font-mono">
                     {items.filter((i) => i.state === "completed" || i.state === "cancelled").length}
                   </span>
                 </button>
                 <button
                   onClick={handleClearUnfinished}
-                  className="w-full text-left px-3 py-1.5 hover:bg-[#2c374d] hover:text-white flex items-center justify-between"
+                  className="w-full text-left px-3 py-1.5 hover:bg-n2c374d hover:text-nwhite flex items-center justify-between"
                 >
                   <span>{t.toolbar.clearUnfinished}</span>
-                  <span className="text-[11px] text-[#8e95a5] font-mono">
+                  <span className="text-[11px] text-n8e95a5 font-mono">
                     {items.filter((i) => i.state === "paused" || i.state === "failed").length}
                   </span>
                 </button>
-                <div className="h-px bg-[#323843] my-1" />
+                <div className="h-px bg-n323843 my-1" />
                 <button
                   onClick={handleClearAll}
                   className="w-full text-left px-3 py-1.5 hover:bg-red-900/50 hover:text-red-200 text-red-400 flex items-center justify-between"
@@ -430,7 +444,7 @@ export const App: React.FC = () => {
 
           {selectedIds.length > 0 && (
             <>
-              <div className="w-px h-4 bg-[#3d4452] mx-1" />
+              <div className="w-px h-4 bg-n3d4452 mx-1" />
               <button
                 onClick={handleDeleteSelected}
                 title={`${t.toolbar.deleteSelected} (${selectedIds.length})`}
@@ -442,7 +456,7 @@ export const App: React.FC = () => {
             </>
           )}
 
-          <div className="w-px h-4 bg-[#3d4452] mx-1" />
+          <div className="w-px h-4 bg-n3d4452 mx-1" />
 
           <button
             onClick={() => setIsExtensionOpen(true)}
@@ -453,13 +467,13 @@ export const App: React.FC = () => {
             }
             className={`relative p-1.5 rounded transition-colors ${
               extensionInfo?.isConnected
-                ? "text-emerald-400 hover:text-emerald-300 hover:bg-[#383f4b]"
-                : "text-[#cfd3dc] hover:text-white hover:bg-[#383f4b]"
+                ? "text-emerald-400 hover:text-emerald-300 hover:bg-n383f4b"
+                : "text-ncfd3dc hover:text-nwhite hover:bg-n383f4b"
             }`}
           >
             <Puzzle size={15} />
             <span
-              className={`absolute top-1 right-1 w-2 h-2 rounded-full border border-[#2b3038] ${
+              className={`absolute top-1 right-1 w-2 h-2 rounded-full border border-n2b3038 ${
                 extensionInfo?.isConnected
                   ? "bg-emerald-400 shadow-sm shadow-emerald-400"
                   : "bg-amber-400"
@@ -470,7 +484,7 @@ export const App: React.FC = () => {
           <button
             onClick={() => setIsSettingsOpen(true)}
             title={t.toolbar.settings}
-            className="p-1.5 text-[#cfd3dc] hover:text-white hover:bg-[#383f4b] rounded transition-colors"
+            className="p-1.5 text-ncfd3dc hover:text-nwhite hover:bg-n383f4b rounded transition-colors"
           >
             <SettingsIcon size={15} />
           </button>
@@ -478,13 +492,13 @@ export const App: React.FC = () => {
 
         {/* Search Bar matching docs/main.png */}
         <div className="relative w-56">
-          <Search size={14} className="absolute left-2.5 top-2 text-[#8e95a5]" />
+          <Search size={14} className="absolute left-2.5 top-2 text-n8e95a5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.toolbar.searchPrompt}
-            className="w-full bg-[#181a1e] border border-[#343a46] rounded-md pl-8 pr-3 py-1 text-xs text-[#cfd3dc] placeholder-[#6f7787] focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full bg-n181a1e border border-n343a46 rounded-md pl-8 pr-3 py-1 text-xs text-ncfd3dc placeholder-n6f7787 focus:outline-none focus:border-blue-500 transition-colors"
           />
         </div>
       </header>
@@ -518,14 +532,14 @@ export const App: React.FC = () => {
       </div>
 
       {/* Bottom Status Bar matching docs/main.png */}
-      <footer className="h-7 bg-[#1c1f24] border-t border-[#16181b] px-4 flex items-center justify-between text-xs text-[#8e95a5]">
+      <footer className="h-7 bg-n1c1f24 border-t border-n16181b px-4 flex items-center justify-between text-xs text-n8e95a5">
         {/* Left: Version + Bridge & Extension indicator */}
         <div
           onClick={() => setIsExtensionOpen(true)}
-          className="flex items-center space-x-2.5 cursor-pointer hover:text-white transition-colors group"
+          className="flex items-center space-x-2.5 cursor-pointer hover:text-nwhite transition-colors group"
           title="Tarayıcı Eklentisi Ayarları"
         >
-          <span className="text-[11px] font-mono text-[#8e95a5] select-all">
+          <span className="text-[11px] font-mono text-n8e95a5 select-all">
             v.{__APP_VERSION__}
           </span>
           <div
@@ -535,7 +549,7 @@ export const App: React.FC = () => {
                 : "bg-amber-500 shadow-amber-500/50"
             }`}
           />
-          <span className="text-[12px] text-[#a0a7b6] group-hover:text-white transition-colors">
+          <span className="text-[12px] text-na0a7b6 group-hover:text-nwhite transition-colors">
             {extensionInfo?.isConnected
               ? `${t.statusBar.extensionConnected}${
                   extensionInfo.browser
@@ -547,14 +561,14 @@ export const App: React.FC = () => {
         </div>
 
         {/* Stats on the right */}
-        <div className="flex items-center space-x-4 text-[12px] text-[#a0a7b6] font-mono">
+        <div className="flex items-center space-x-4 text-[12px] text-na0a7b6 font-mono">
           <div className="flex items-center space-x-1.5" title="Total downloads">
-            <List size={14} className="text-[#8e95a5]" />
+            <List size={14} className="text-n8e95a5" />
             <span>{items.length}</span>
           </div>
 
           <div className="flex items-center space-x-1.5" title="Total download speed">
-            <CloudDownload size={14} className="text-[#8e95a5]" />
+            <CloudDownload size={14} className="text-n8e95a5" />
             <span>{formatTotalSpeed(totalSpeed)}</span>
           </div>
         </div>
@@ -613,8 +627,8 @@ export const App: React.FC = () => {
             <CloudDownload size={18} />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="text-xs font-semibold text-white">Yeni Sürüm Hazır!</h4>
-            <p className="text-[11px] text-[#a0a7b6] mt-0.5 leading-relaxed">
+            <h4 className="text-xs font-semibold text-nwhite">Yeni Sürüm Hazır!</h4>
+            <p className="text-[11px] text-na0a7b6 mt-0.5 leading-relaxed">
               İndirme Yöneticisi v{updateDownloadedVersion} indirildi. Güncellemeyi tamamlamak için yeniden başlatın.
             </p>
             <div className="mt-2.5 flex items-center space-x-2">
@@ -626,7 +640,7 @@ export const App: React.FC = () => {
               </button>
               <button
                 onClick={() => setUpdateDownloadedVersion(null)}
-                className="px-2 py-1 text-xs text-[#8e95a5] hover:text-white transition-colors"
+                className="px-2 py-1 text-xs text-n8e95a5 hover:text-nwhite transition-colors"
               >
                 Sonra
               </button>

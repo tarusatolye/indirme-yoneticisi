@@ -44,16 +44,16 @@ export function Combobox<T extends string | number>({ value, options, onChange, 
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between bg-[#181a1e] border border-[#343a46] rounded-md px-3 py-1.5 text-xs text-white text-left focus:outline-none focus:border-blue-500 transition-colors"
+        className="w-full flex items-center justify-between bg-n181a1e border border-n343a46 rounded-md px-3 py-1.5 text-xs text-nwhite text-left focus:outline-none focus:border-blue-500 transition-colors"
       >
         <span className="truncate">{selected?.label ?? ""}</span>
-        <ChevronDown size={14} className="text-[#8e95a5] shrink-0 ml-2" />
+        <ChevronDown size={14} className="text-n8e95a5 shrink-0 ml-2" />
       </button>
       {open && (
         <ul
           role="listbox"
           aria-label={ariaLabel}
-          className="absolute z-50 mt-1 w-full bg-[#181a1e] border border-[#343a46] rounded-md shadow-lg py-1 max-h-56 overflow-auto"
+          className="absolute z-50 mt-1 w-full bg-n181a1e border border-n343a46 rounded-md shadow-lg py-1 max-h-56 overflow-auto"
         >
           {options.map((o) => (
             <li key={String(o.value)} role="option" aria-selected={o.value === value}>
@@ -63,7 +63,7 @@ export function Combobox<T extends string | number>({ value, options, onChange, 
                   onChange(o.value);
                   setOpen(false);
                 }}
-                className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-left text-white hover:bg-[#2c374d]"
+                className="w-full flex items-center justify-between px-3 py-1.5 text-xs text-left text-nwhite hover:bg-n2c374d"
               >
                 <span>{o.label}</span>
                 {o.value === value && <Check size={14} className="text-blue-400" />}

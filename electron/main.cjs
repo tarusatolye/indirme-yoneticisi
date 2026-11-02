@@ -29,7 +29,8 @@ let settings = {
   max_concurrent: 3,
   port: 48213,
   ytdlp_path: 'yt-dlp',
-  language: 'tr'
+  language: 'tr',
+  theme: 'system'
 };
 
 if (fs.existsSync(settingsJsonPath)) {

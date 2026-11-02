@@ -100,17 +100,17 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 modal-perde backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#24272d] border border-[#3b424e] rounded-xl shadow-2xl w-full max-w-xl text-[#d4d8e2] text-[13px] font-sans overflow-hidden">
+      <div className="bg-n24272d border border-n3b424e rounded-xl shadow-2xl w-full max-w-xl text-nd4d8e2 text-[13px] font-sans overflow-hidden">
         {/* macOS style Window Header */}
-        <div className="h-9 px-4 bg-[#1e2126] border-b border-[#323843] flex items-center justify-between select-none">
+        <div className="h-9 px-4 bg-n1e2126 border-b border-n323843 flex items-center justify-between select-none">
           <div className="flex items-center space-x-2">
-            <span className="font-mono text-xs text-[#8e95a5] font-semibold">{pct}%</span>
-            <span className="text-[#626875]">·</span>
-            <span className="font-medium text-xs text-white truncate max-w-xs">{item.fileName}</span>
+            <span className="font-mono text-xs text-n8e95a5 font-semibold">{pct}%</span>
+            <span className="text-n626875">·</span>
+            <span className="font-medium text-xs text-nwhite truncate max-w-xs">{item.fileName}</span>
           </div>
           <button
             onClick={onClose}
-            className="text-[#8e95a5] hover:text-white p-1 rounded hover:bg-[#343a46] transition-colors"
+            className="text-n8e95a5 hover:text-nwhite p-1 rounded hover:bg-n343a46 transition-colors"
           >
             <X size={15} />
           </button>
@@ -120,10 +120,10 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
         <div className="p-5 space-y-4">
           {/* Two-Column Info Grid matching docs/detail.png */}
           <div className="grid grid-cols-12 gap-y-2 text-xs">
-            <div className="col-span-3 text-[#8e95a5]">{t.detail.url}</div>
-            <div className="col-span-9 font-mono text-[#c0c5d1] truncate select-all">{item.url}</div>
+            <div className="col-span-3 text-n8e95a5">{t.detail.url}</div>
+            <div className="col-span-9 font-mono text-nc0c5d1 truncate select-all">{item.url}</div>
 
-            <div className="col-span-3 text-[#8e95a5]">{t.detail.status}</div>
+            <div className="col-span-3 text-n8e95a5">{t.detail.status}</div>
             <div className="col-span-9 font-medium">
               <span
                 className={
@@ -133,38 +133,38 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
                     ? "text-[#62a4f8]"
                     : item.state === "failed"
                     ? "text-[#f87171]"
-                    : "text-[#8e95a5]"
+                    : "text-n8e95a5"
                 }
               >
                 {item.state === "downloading" ? t.detail.receivingData : t.status[item.state]}
               </span>
             </div>
 
-            <div className="col-span-3 text-[#8e95a5]">{t.detail.fileSize}</div>
-            <div className="col-span-9 font-mono text-[#c0c5d1]">{formatSize(item.totalBytes)}</div>
+            <div className="col-span-3 text-n8e95a5">{t.detail.fileSize}</div>
+            <div className="col-span-9 font-mono text-nc0c5d1">{formatSize(item.totalBytes)}</div>
 
-            <div className="col-span-3 text-[#8e95a5]">{t.detail.downloaded}</div>
-            <div className="col-span-9 font-mono text-[#c0c5d1]">
+            <div className="col-span-3 text-n8e95a5">{t.detail.downloaded}</div>
+            <div className="col-span-9 font-mono text-nc0c5d1">
               {formatSize(item.receivedBytes)} ({pct}%)
             </div>
 
-            <div className="col-span-3 text-[#8e95a5]">{t.detail.transferRate}</div>
-            <div className="col-span-9 font-mono text-[#c0c5d1]">{formatSpeed(item.speed)}</div>
+            <div className="col-span-3 text-n8e95a5">{t.detail.transferRate}</div>
+            <div className="col-span-9 font-mono text-nc0c5d1">{formatSpeed(item.speed)}</div>
 
-            <div className="col-span-3 text-[#8e95a5]">{t.detail.timeLeft}</div>
-            <div className="col-span-9 font-mono text-[#c0c5d1]">{formatTimeLeft()}</div>
+            <div className="col-span-3 text-n8e95a5">{t.detail.timeLeft}</div>
+            <div className="col-span-9 font-mono text-nc0c5d1">{formatTimeLeft()}</div>
 
-            <div className="col-span-3 text-[#8e95a5]">{t.detail.resumeCapability}</div>
-            <div className="col-span-9 text-[#c0c5d1]">
+            <div className="col-span-3 text-n8e95a5">{t.detail.resumeCapability}</div>
+            <div className="col-span-9 text-nc0c5d1">
               {item.supportsRanges || item.totalBytes > 0 ? t.detail.yes : t.detail.no}
             </div>
 
-            <div className="col-span-3 text-[#8e95a5]">{t.detail.saveTo}</div>
-            <div className="col-span-9 font-mono text-[#8e95a5] truncate select-all">{item.savePath}</div>
+            <div className="col-span-3 text-n8e95a5">{t.detail.saveTo}</div>
+            <div className="col-span-9 font-mono text-n8e95a5 truncate select-all">{item.savePath}</div>
           </div>
 
           {/* Primary Progress Bar */}
-          <div className="w-full bg-[#16181b] h-3 rounded-full overflow-hidden border border-[#363c48]">
+          <div className="w-full bg-n16181b h-3 rounded-full overflow-hidden border border-n363c48">
             <div
               className="bg-[#2f6feb] h-full rounded-full transition-all duration-300"
               style={{ width: `${pct}%` }}
@@ -176,17 +176,17 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => setShowDetails(!showDetails)}
-                className="px-2.5 py-1 text-xs bg-[#2d323b] hover:bg-[#383e4a] text-[#cfd3dc] rounded border border-[#3b424e] transition-colors"
+                className="px-2.5 py-1 text-xs bg-n2d323b hover:bg-n383e4a text-ncfd3dc rounded border border-n3b424e transition-colors"
               >
                 {showDetails ? t.detail.hideDetails : t.detail.showDetails}
               </button>
 
-              <label className="flex items-center space-x-1.5 text-xs text-[#8e95a5] cursor-pointer">
+              <label className="flex items-center space-x-1.5 text-xs text-n8e95a5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={autoClose}
                   onChange={(e) => setAutoClose(e.target.checked)}
-                  className="rounded bg-[#1e2126] border-[#3b424e] text-blue-600 focus:ring-0"
+                  className="rounded bg-n1e2126 border-n3b424e text-blue-600 focus:ring-0"
                 />
                 <span>{t.detail.closeWhenCompleted}</span>
               </label>
@@ -196,7 +196,7 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
               {item.state === "downloading" ? (
                 <button
                   onClick={() => onPause(item.id)}
-                  className="px-3 py-1 text-xs bg-[#2d323b] hover:bg-[#383e4a] text-white rounded border border-[#3b424e] transition-colors font-medium"
+                  className="px-3 py-1 text-xs bg-n2d323b hover:bg-n383e4a text-nwhite rounded border border-n3b424e transition-colors font-medium"
                 >
                   {t.detail.pause}
                 </button>
@@ -212,14 +212,14 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
               {item.state === "completed" ? (
                 <button
                   onClick={() => onOpenFolder(item.savePath)}
-                  className="px-3 py-1 text-xs bg-[#2d323b] hover:bg-[#383e4a] text-white rounded border border-[#3b424e] transition-colors font-medium"
+                  className="px-3 py-1 text-xs bg-n2d323b hover:bg-n383e4a text-nwhite rounded border border-n3b424e transition-colors font-medium"
                 >
                   {t.detail.showInFolder}
                 </button>
               ) : (
                 <button
                   onClick={() => onCancel(item.id)}
-                  className="px-3 py-1 text-xs bg-[#2d323b] hover:bg-[#383e4a] text-[#cfd3dc] rounded border border-[#3b424e] transition-colors"
+                  className="px-3 py-1 text-xs bg-n2d323b hover:bg-n383e4a text-ncfd3dc rounded border border-n3b424e transition-colors"
                 >
                   {t.detail.cancel}
                 </button>
@@ -229,18 +229,18 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
 
           {/* Details Section (Connection Segment Bar & Table) */}
           {showDetails && (
-            <div className="border-t border-[#323843] pt-4 space-y-3">
-              <div className="text-center text-[11px] text-[#8e95a5] font-medium tracking-wide">
+            <div className="border-t border-n323843 pt-4 space-y-3">
+              <div className="text-center text-[11px] text-n8e95a5 font-medium tracking-wide">
                 {t.detail.connectionsTitle}
               </div>
 
               {/* IDM Segment Visualizer Bar matching docs/detail.png */}
-              <div className="w-full bg-[#181a1e] h-3 rounded flex overflow-hidden border border-[#343a46] p-0.5 space-x-0.5">
+              <div className="w-full bg-n181a1e h-3 rounded flex overflow-hidden border border-n343a46 p-0.5 space-x-0.5">
                 {displaySegments.map((seg, i) => {
                   const chunkLen = seg.end > seg.start ? seg.end - seg.start : 1;
                   const segPct = Math.min(100, Math.round((seg.received / chunkLen) * 100));
                   return (
-                    <div key={i} className="flex-1 bg-[#252931] h-full rounded-sm overflow-hidden">
+                    <div key={i} className="flex-1 bg-n252931 h-full rounded-sm overflow-hidden">
                       <div
                         className="bg-[#2f6feb] h-full transition-all duration-300"
                         style={{ width: `${segPct}%` }}
@@ -251,21 +251,21 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
               </div>
 
               {/* Connections Table */}
-              <div className="bg-[#1b1e23] border border-[#323843] rounded-md overflow-hidden text-xs">
-                <div className="grid grid-cols-12 bg-[#212429] border-b border-[#323843] text-[#8e95a5] font-medium px-3 py-1">
+              <div className="bg-n1b1e23 border border-n323843 rounded-md overflow-hidden text-xs">
+                <div className="grid grid-cols-12 bg-n212429 border-b border-n323843 text-n8e95a5 font-medium px-3 py-1">
                   <div className="col-span-1">{t.detail.colN}</div>
                   <div className="col-span-3">{t.detail.colDownloaded}</div>
                   <div className="col-span-3">{t.detail.colStart}</div>
                   <div className="col-span-5">{t.detail.colInfo}</div>
                 </div>
 
-                <div className="max-h-36 overflow-y-auto divide-y divide-[#282c35]">
+                <div className="max-h-36 overflow-y-auto divide-y divide-n282c35">
                   {displaySegments.map((seg, idx) => (
                     <div
                       key={idx}
-                      className="grid grid-cols-12 px-3 py-1.5 font-mono text-[11px] text-[#c0c5d1] items-center hover:bg-[#252931]"
+                      className="grid grid-cols-12 px-3 py-1.5 font-mono text-[11px] text-nc0c5d1 items-center hover:bg-n252931"
                     >
-                      <div className="col-span-1 text-[#8e95a5] font-sans">{idx + 1}</div>
+                      <div className="col-span-1 text-n8e95a5 font-sans">{idx + 1}</div>
                       <div className="col-span-3">{formatSize(seg.received)}</div>
                       <div className="col-span-3">{formatSize(seg.start)}</div>
                       <div className="col-span-5 font-sans">
@@ -274,9 +274,9 @@ export const SegmentsModal: React.FC<DownloadDetailModalProps> = ({
                         ) : seg.active ? (
                           <span className="text-[#62a4f8]">{t.detail.receivingData}</span>
                         ) : seg.received > 0 ? (
-                          <span className="text-[#8e95a5]">{t.detail.standby}</span>
+                          <span className="text-n8e95a5">{t.detail.standby}</span>
                         ) : (
-                          <span className="text-[#626875]">-</span>
+                          <span className="text-n626875">-</span>
                         )}
                       </div>
                     </div>

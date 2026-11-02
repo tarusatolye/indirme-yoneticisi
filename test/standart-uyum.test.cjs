@@ -78,3 +78,14 @@ test('eklenti manifesti hem Chrome (service_worker) hem Firefox (background.scri
   assert.deepEqual(manifest.background.scripts, ['background.js']);
   assert.ok(manifest.browser_specific_settings.gecko.id);
 });
+
+test('tema: varsayılan sistem, açık palet tanımlı, nötr renkler sabit hex değil', () => {
+  const kok = path.join(__dirname, '..');
+  assert.match(fs.readFileSync(path.join(kok, 'electron', 'main.cjs'), 'utf8'), /theme: 'system'/);
+  assert.match(fs.readFileSync(path.join(kok, 'src', 'index.css'), 'utf8'), /:root\[data-theme='light'\]\s*\{[^}]*--n181a1e/);
+  const kaba = [];
+  for (const f of kaynaklar(path.join(kok, 'src'))) {
+    if (/\b(bg|text|border)-\[#(181a1e|8e95a5|343a46)\]/.test(fs.readFileSync(f, 'utf8'))) kaba.push(f);
+  }
+  assert.deepEqual(kaba, []);
+});
