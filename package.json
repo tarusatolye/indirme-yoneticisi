@@ -63,7 +63,11 @@
       "createStartMenuShortcut": true,
       "shortcutName": "İndirme Yöneticisi",
       "uninstallDisplayName": "İndirme Yöneticisi",
-      "license": "build/license.txt"
+      "license": "build/license.txt",
+      "artifactName": "Indirme-Yoneticisi-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Indirme-Yoneticisi-${version}-portable.${ext}"
     },
     "protocols": [
       {
