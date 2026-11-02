@@ -46,7 +46,7 @@ test('arayüz metninde uzun tire, büyük harf CSS ve gizli satır işlemi yok',
 test('index.html ikon seti ve sabit başlık standarda uyar', () => {
   const kok = path.join(__dirname, '..');
   const html = fs.readFileSync(path.join(kok, 'index.html'), 'utf8');
-  assert.match(html, /<title>tarus İndirme Yöneticisi<\/title>/);
+  assert.match(html, /<title>İndirme Yöneticisi<\/title>/);
   const ikonlar = [
     [/<link rel="icon" href="\/favicon\.ico" sizes="48x48"/, 'favicon.ico'],
     [/<link rel="icon" type="image\/svg\+xml" sizes="any" href="\/favicon\.svg"/, 'favicon.svg'],

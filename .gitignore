@@ -1,4 +1,5 @@
 bin/
+bin-win/
 release/
 node_modules/
 dist/
