@@ -70,3 +70,11 @@ test('sürüm numarası yalnız package.json\'da yazılır; eklenti manifesti on
   }
   assert.deepEqual(kaba, []);
 });
+
+test('eklenti manifesti hem Chrome (service_worker) hem Firefox (background.scripts + gecko id) için geçerlidir', () => {
+  const root = path.join(__dirname, '..');
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'Extension', 'manifest.json'), 'utf8'));
+  assert.equal(manifest.background.service_worker, 'background.js');
+  assert.deepEqual(manifest.background.scripts, ['background.js']);
+  assert.ok(manifest.browser_specific_settings.gecko.id);
+});

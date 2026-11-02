@@ -24,7 +24,14 @@
     "http://localhost/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "indirme-yoneticisi@tarus.tr",
+      "strict_min_version": "121.0"
+    }
   },
   "action": {
     "default_popup": "popup.html",
