@@ -166,7 +166,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     { value: "en", label: "English (Download Manager)" },
                   ]}
                 />
-  
+              </div>
+
               <div className="space-y-1">
                 <label className="text-n8e95a5 font-medium">{t.theme}</label>
                 <Combobox
@@ -180,7 +181,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   ]}
                 />
               </div>
-            </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
