@@ -1,0 +1,33 @@
+/* ════════════════════════════════════════════════════════════════════
+   İndirme yöneticisi hareket katmanı — tarus kabuk animasyon standardı
+   (kabuk 0.37.3, STANDARTLAR §13a; A1b, C3b; tempo «Dengeli»). Yerleşime
+   dokunmaz; değerler ozluk/tarus-kabuk/web/css/tarus-hareket.css §7 ile aynı.
+   GM kararı 2026-11-11.
+   ════════════════════════════════════════════════════════════════════ */
+:root {
+  --hareket-tempo: 1;
+  --hareket-anlik:  calc(120ms * var(--hareket-tempo));
+  --hareket-dialog: calc(300ms * var(--hareket-tempo));
+  --hareket-perde:  calc(220ms * var(--hareket-tempo));
+  --egri-cikis: cubic-bezier(.22, 1, .36, 1);
+  --hareket-golge: rgb(0 0 0 / .45);
+}
+:root[data-theme='light'], .light { --hareket-golge: rgb(0 0 0 / .16); }
+
+/* A1b Dialog: perde 220 ms solar; pencere alttan 40 px kayarak + solarak gelir (300 ms). */
+@keyframes indir-h-perde { from { opacity: 0; } }
+@keyframes indir-h-dialog { from { opacity: 0; transform: translate3d(0, 40px, 0); } }
+.modal-perde { animation: indir-h-perde var(--hareket-perde) ease-out backwards; }
+.modal-perde > :first-child { animation: indir-h-dialog var(--hareket-dialog) var(--egri-cikis) backwards; }
+
+/* C3b Düğme (pencere içindeki dolgulu düğmeler): üzerine gelince 1 px kalkar + hafif gölge, basınca iner. */
+.modal-perde button[class*="bg-"]:not(:disabled) {
+  transition: transform var(--hareket-anlik) var(--egri-cikis), box-shadow var(--hareket-anlik) ease, background-color var(--hareket-anlik) ease, border-color var(--hareket-anlik) ease, color var(--hareket-anlik) ease;
+}
+.modal-perde button[class*="bg-"]:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 4px 12px var(--hareket-golge); }
+.modal-perde button[class*="bg-"]:not(:disabled):active { transform: translateY(1px); box-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-perde, .modal-perde > :first-child { animation: none !important; }
+  .modal-perde button { transition: none !important; transform: none !important; }
+}
