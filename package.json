@@ -1,7 +1,7 @@
 {
   "name": "indirme-yoneticisi",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "tarus indirme yöneticisi — hızlı ve açık kaynak kodlu indirme yöneticisi",
   "author": "tarusatolye <yazilim@tarus.tr>",
   "copyright": "Copyright © 2026 tarusatolye",
@@ -128,7 +128,7 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.20",
-    "electron": "^44.7.0",
+    "electron": "^44.11.3",
     "electron-builder": "^26.15.3",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
