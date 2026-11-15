@@ -1,7 +1,7 @@
 {
   "name": "indirme-yoneticisi",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "tarus indirme yöneticisi — hızlı ve açık kaynak kodlu indirme yöneticisi",
   "author": "tarusatolye <yazilim@tarus.tr>",
   "copyright": "Copyright © 2026 tarusatolye",
@@ -57,7 +57,10 @@
       ],
       "icon": "docs/icon.ico",
       "extraResources": [
-        { "from": "bin-win", "to": "bin" }
+        {
+          "from": "bin-win",
+          "to": "bin"
+        }
       ]
     },
     "nsis": {
@@ -98,8 +101,14 @@
       "category": "public.app-category.utilities",
       "artifactName": "Indirme-Yoneticisi-${version}-mac.${ext}",
       "extraResources": [
-        { "from": "bin", "to": "bin" },
-        { "from": "resources/mac", "to": "." }
+        {
+          "from": "bin",
+          "to": "bin"
+        },
+        {
+          "from": "resources/mac",
+          "to": "."
+        }
       ],
       "extendInfo": {
         "CFBundleDisplayName": "Indirme Yoneticisi",
