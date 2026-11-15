@@ -48,6 +48,7 @@ export const App: React.FC = () => {
   const [extensionInfo, setExtensionInfo] = useState<ExtensionInfo | null>(null);
   const [detailItem, setDetailItem] = useState<DownloadItem | null>(null);
   const [updateDownloadedVersion, setUpdateDownloadedVersion] = useState<string | null>(null);
+  const [updateError, setUpdateError] = useState<string | null>(null);
 
   // Tema: sistem seçiliyken işletim sistemi temasını izler.
   useEffect(() => {
@@ -131,6 +132,10 @@ export const App: React.FC = () => {
       setUpdateDownloadedVersion(event.payload?.version || "Yeni");
     });
 
+    const unlistenUpdateError = listen<{ message: string }>("update_error", (event) => {
+      setUpdateError(event.payload?.message || "Bilinmeyen hata");
+    });
+
     const unlistenExtStatus = listen<any>("extension_status", (event) => {
       if (event.payload) {
         setExtensionInfo((prev) => ({
@@ -158,6 +163,7 @@ export const App: React.FC = () => {
       unlistenUpdate.then((f) => f());
       unlistenDelete.then((f) => f());
       unlistenUpdateDownloaded.then((f) => f());
+      unlistenUpdateError.then((f) => f());
       unlistenExtStatus.then((f) => f());
       clearInterval(extInterval);
     };
@@ -621,7 +627,7 @@ export const App: React.FC = () => {
       />
 
       {/* Auto Update Notification Toast */}
-      {updateDownloadedVersion && (
+      {(updateDownloadedVersion || updateError) && (
         <div className="fixed bottom-10 right-4 z-50 bg-[#1e232d] border border-blue-500/60 shadow-2xl rounded-lg p-3.5 max-w-sm flex items-start space-x-3 backdrop-blur-md">
           <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5">
             <CloudDownload size={18} />
@@ -631,6 +637,11 @@ export const App: React.FC = () => {
             <p className="text-[11px] text-na0a7b6 mt-0.5 leading-relaxed">
               İndirme Yöneticisi v{updateDownloadedVersion} indirildi. Güncellemeyi tamamlamak için yeniden başlatın.
             </p>
+            {updateError && (
+              <p className="text-[11px] text-red-400 mt-1.5 leading-relaxed break-words">
+                Güncelleme kurulamadı: {updateError}
+              </p>
+            )}
             <div className="mt-2.5 flex items-center space-x-2">
               <button
                 onClick={() => invoke("restart_and_update")}
@@ -639,7 +650,7 @@ export const App: React.FC = () => {
                 Yeniden Başlat ve Güncelle
               </button>
               <button
-                onClick={() => setUpdateDownloadedVersion(null)}
+                onClick={() => { setUpdateDownloadedVersion(null); setUpdateError(null); }}
                 className="px-2 py-1 text-xs text-n8e95a5 hover:text-nwhite transition-colors"
               >
                 Sonra
