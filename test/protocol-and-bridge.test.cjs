@@ -207,9 +207,11 @@ test('macOS bundle declares every protocol scheme (Info.plist CFBundleURLTypes) 
   }
 });
 
-test('macOS bundle is sealed with an ad-hoc signature (unsealed bundles are reported as "damaged")', () => {
+test('macOS bundle is signed with Developer ID and hardened runtime (ad-hoc builds cannot auto-update)', () => {
   const pkg = require('../package.json');
-  assert.equal(pkg.build.mac.identity, '-');
+  assert.match(pkg.build.mac.identity, /UQYJQL787C/);
+  assert.equal(pkg.build.mac.hardenedRuntime, true);
+  assert.ok(pkg.build.mac.entitlements);
 });
 
 test('Extension asks to launch the app in the current tab instead of a new tab that closes itself', () => {
