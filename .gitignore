@@ -5,6 +5,7 @@ node_modules/
 dist/
 build/*
 !build/license.txt
+!build/entitlements.mac.plist
 !build/installer.nsh
 Tools/
 DerivedData/

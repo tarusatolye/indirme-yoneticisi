@@ -22,9 +22,10 @@
     "start": "electron electron/main.cjs",
     "dist": "npm run build && electron-builder",
     "dist:win": "node scripts/fetch-win-tools.cjs && npm run build && electron-builder --win nsis portable --x64 -c.productName=\"İndirme Yöneticisi\" -c.win.executableName=\"Indirme Yoneticisi\"",
-    "dist:mac": "npm run build && electron-builder --mac dmg zip"
+    "dist:mac": "export APPLE_KEYCHAIN_PROFILE=\"${APPLE_KEYCHAIN_PROFILE:-tarus-notary}\" && npm run build && electron-builder --mac dmg zip"
   },
   "build": {
+    "afterSign": "scripts/notarize.cjs",
     "appId": "tr.tarus.indirmeyoneticisi",
     "productName": "Indirme Yoneticisi",
     "copyright": "Copyright © 2026 tarusatolye",
@@ -83,8 +84,12 @@
       }
     ],
     "mac": {
-      "identity": "-",
-      "hardenedRuntime": false,
+      "identity": "EMRE YILDIRIM (UQYJQL787C)",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "notarize": false,
       "target": [
         "dmg",
         "zip"
