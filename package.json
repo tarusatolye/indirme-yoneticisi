@@ -12,7 +12,11 @@
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/sync-version.cjs && tsc && vite build",
+    "surum-esitle": "node scripts/surum-esitle.cjs",
+    "surum-kontrol": "node scripts/surum-esitle.cjs --kontrol",
+    "version": "node scripts/surum-esitle.cjs && git add build/license.txt Extension/manifest.json",
+    "prebuild": "node scripts/surum-esitle.cjs --kontrol",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "node --test test/*.test.cjs",
     "start": "electron electron/main.cjs",
